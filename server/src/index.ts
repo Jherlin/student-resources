@@ -150,6 +150,7 @@ app.post("/logout", async (req, res) => {
   }
 });
 
+// User authentication for front end
 app.get("/fetch-user", async (req, res) => {
   if (req.sessionID && req.session.user) {
     res.status(200);
@@ -158,6 +159,34 @@ app.get("/fetch-user", async (req, res) => {
   return res.sendStatus(403);
 })
 
+// Search engine
+app.post("/search-resources", async (req, res) => {
+  const { searchQuery, offset } = req.body;
+
+  try {
+    const data = await db.getSearchItems(searchQuery, offset);
+    return res.json( data );
+} catch (error) {
+    console.error(error);
+    res.status(403);
+    return res.sendStatus(403);
+  };
+});
+
+app.post("/search-category", async (req, res) => {
+  const { category, offset } = req.body;
+
+  try {
+    const data = await db.getItemsByCategory(category, offset) as RowDataPacket;
+    return res.json( data );
+} catch (error) {
+    console.error(error);
+    res.status(403);
+    return res.sendStatus(403);
+  };
+});
+
+// Resource submittals to database and admin approval functionality
 app.post("/submit-resource", async (req, res) => {
   const { url, category, submittedBy, approvalPending } = req.body;
 
@@ -189,6 +218,10 @@ app.post("/submit-resource", async (req, res) => {
 });
 
 app.post("/fetch-pending", async (req, res) => {
+  if (!req.sessionID || req.session.user?.username !== "admin") {
+    return res.sendStatus(403);
+  }
+
   try {
     const data = await db.getPendingSubmittals();
     return res.json( data );
@@ -201,6 +234,10 @@ app.post("/fetch-pending", async (req, res) => {
 
 app.put("/update-status", async (req, res) => {
   const { resourceId } = req.body;
+
+  if (!req.sessionID || req.session.user?.username !== "admin") {
+    return res.sendStatus(403);
+  }
 
   try {
     const data = await db.updatePendingStatus(resourceId);
@@ -215,6 +252,10 @@ app.put("/update-status", async (req, res) => {
 app.delete("/delete-resource", async (req, res) => {
   const { resourceId } = req.body;
 
+  if (!req.sessionID || req.session.user?.username !== "admin") {
+    return res.sendStatus(403);
+  }
+
   try {
     const data = await db.deleteResource(resourceId);
     return res.json( data );
@@ -224,32 +265,6 @@ app.delete("/delete-resource", async (req, res) => {
     return res.sendStatus(403);
   };
 })
-
-app.post("/search-resources", async (req, res) => {
-  const { searchQuery, offset } = req.body;
-
-  try {
-    const data = await db.getSearchItems(searchQuery, offset);
-    return res.json( data );
-} catch (error) {
-    console.error(error);
-    res.status(403);
-    return res.sendStatus(403);
-  };
-});
-
-app.get("/search-category/:category", async (req, res) => {
-  const category = req.params.category;
-
-  try {
-    const data = await db.getItemsByCategory(category);
-    return res.json( data );
-} catch (error) {
-    console.error(error);
-    res.status(403);
-    return res.sendStatus(403);
-  };
-});
 
 app.listen(3000, () => 
   {console.log(`⚡Server is listening on 3000`)});

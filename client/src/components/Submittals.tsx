@@ -8,7 +8,7 @@ const Submittals = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
   const user = globalContext.user as User;
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     url: "",
@@ -21,6 +21,7 @@ const Submittals = () => {
   const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+    setLoading(true);
     axios
         .post(`${process.env.REACT_APP_BASE_URL}/submit-resource`, formData, {
             withCredentials: true,
@@ -49,7 +50,10 @@ const Submittals = () => {
             submittedBy: user.id,
             approvalPending: true
             });
-      })
+        })
+        .finally(() => {
+          setLoading(false)
+        });
     };
 
   useEffect(() => {
@@ -86,6 +90,7 @@ const Submittals = () => {
           </select>
           <button>Submit</button>
         </form>
+        {loading && <span>Loading...</span>}
     </div>
   );
 };

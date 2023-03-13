@@ -30,7 +30,6 @@ const AdminPanel = () => {
     })
     .catch((error) => {
       console.log(error.response.data);
-
   })
   }
 

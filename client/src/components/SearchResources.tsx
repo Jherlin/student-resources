@@ -16,6 +16,7 @@ const SearchResources = () => {
   const [loadMore, setLoadMore] = useState(false);
   const [finalQuery, setFinalQuery] = useState("");
   const [query, setQuery] = useState(searchParams ? searchParams : "");
+  const [category, setCategory] = useState("");
   const { response, loading } = useAxios({
     method: "POST",
     url: `${process.env.REACT_APP_BASE_URL}/search-resources`,
@@ -53,29 +54,64 @@ const SearchResources = () => {
     };
 
   const loadMoreResults = () => {
-    if (searchResults.length < numberOfPages * 25) {
+    if(searchResults.length < numberOfPages * 25) {
       alert("There are no more resources in the database");
       return;
     }
     
+    if(category){
+      loadMoreByCategory();
+      return;
+    }
+
     numberOfPages += 1;
     let paginationOffset = (numberOfPages - 1) * 25
     setSkipPages(paginationOffset);
     setLoadMore(true);
   };
 
-  const searchCategory = (category: string) => {
-    console.log("Searching by category");
+  const loadMoreByCategory = () => {
+    numberOfPages += 1;
+    const offset = (numberOfPages - 1) * 25;
 
     axios
-      .get(`${process.env.REACT_APP_BASE_URL}/search-category/${category}`, {
+    .post(`${process.env.REACT_APP_BASE_URL}/search-category`, {category, offset},{
+      withCredentials: true,
+      headers: {
+      "Access-Control-Allow-Origin": "*",
+      }
+    })
+    .then(response => {
+      if(!response.data.length) {
+        alert("There are no resources under this category as of current")
+      } else {
+        setSearchResults(prevState => {
+          return [...prevState, ...response.data]
+        })
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  }
+
+  const searchCategory = (category: string) => {
+    console.log("Searching by category");
+    const offset = (numberOfPages - 1) * 25
+
+    axios
+      .post(`${process.env.REACT_APP_BASE_URL}/search-category`, {category, offset},{
         withCredentials: true,
         headers: {
         "Access-Control-Allow-Origin": "*",
         }
       })
       .then(response => {
-        setSearchResults(response.data);
+        if(!response.data.length) {
+          alert("There are no resources under this category as of current")
+        } else {
+          setSearchResults(response.data);
+        }
       })
       .catch(error => {
         console.log(error);
@@ -116,13 +152,15 @@ const SearchResources = () => {
         </form>
           {!searchResults.length &&
           <div className="categories-container">
-            <Categories searchCategory={searchCategory}/>
+            <Categories searchCategory={searchCategory} setCategory={setCategory}/>
           </div>}
           <div className={!searchResults.length || (loading && !skipPages) ? "search-results" : "search-results show-search-results"}>
             <SearchResults searchResults={searchResults} />
           </div>
-          {loading && <><span>Loading...</span><br/><br/></>}
-          {searchResults.length >= 25 && <Button variant="contained" size="small" onClick={() => loadMoreResults()}>Load more</Button>}
+          <div className="loadingSection">
+            {loading && <><span>Loading...</span><br/><br/></>}
+            {searchResults.length >= 25 && <Button variant="contained" size="small" onClick={() => loadMoreResults()}>Load more</Button>}
+          </div>
       </div>
     </div>
   );

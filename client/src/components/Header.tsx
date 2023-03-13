@@ -67,7 +67,7 @@ const Header = () => {
         <header>
           <nav className={toggle ? "overlay" : "nav-bar"}>
             <div className={toggle ? "navbar-left-container hide-search-icon " : "navbar-left-container"}>
-              <SearchIcon />
+              <Link to="/"><SearchIcon onClick={refreshPage}/></Link>
             </div>
             <div className={toggle ? "hide-menu" : "menu"}>
               <MenuIcon onClick={() => setToggle(prev => !prev)}/>
@@ -79,7 +79,7 @@ const Header = () => {
               {!user.id ? 
               <li onClick={handleToggle}><Link to="/register">Register</Link></li> :
               <li onClick={handleToggle}><Link to="/dashboard">Dashboard</Link></li>}
-              {user.username === "admin" && <li><Link to="/admin">Admin Panel</Link></li>}
+              {user.username === "admin" && <li onClick={handleToggle}><Link to="/admin">Admin Panel</Link></li>}
               {user.id ? (<button onClick={logout}>Logout</button>) : (<button onClick={handleLogin}>Login</button>)}
             </ul>  
           </nav>
