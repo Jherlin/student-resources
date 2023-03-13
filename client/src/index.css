@@ -219,15 +219,21 @@ ul button:hover {
 }
 
 .media-content {
-  flex: 4 1 410px;
+  flex: 4 1 180px;
   margin-right: 10px;
 }
 
-.resource-img {
-  width: 100px;
-  height: 100px;
+.resource-img a {
+  display: flex;
+  align-items: center;
+}
+
+.resource-img img {
+  width: 120px;
+  height: 120px;
+  background-color: white;
   cursor: pointer;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .card a:link, 
@@ -342,16 +348,24 @@ ul button:hover {
   .card p {
     font-size: 1rem;
   }
+
 }
 
 @media only screen and (min-width: 992px) {
   .container {
-    width: 60dvw;
-  } 
+    width: 70dvw;
+  }
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1600px) {
   .container {
     width: 50dvw;
-  } 
+  }
+  
+  .resource-img img {
+    width: 180px;
+    height: 120px;
+    cursor: pointer;
+    object-fit: contain;
+  }
 } 
