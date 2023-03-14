@@ -15,7 +15,7 @@ const SearchResources = () => {
   const [skipPages, setSkipPages] = useState(0);
   const [loadMore, setLoadMore] = useState(false);
   const [finalQuery, setFinalQuery] = useState("");
-  const [query, setQuery] = useState(searchParams ? searchParams : "");
+  const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const { response, loading } = useAxios({
     method: "POST",
@@ -46,9 +46,6 @@ const SearchResources = () => {
       alert("Please enter a search query");
       return;
     };
-    
-    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    window.history.replaceState({path:newUrl},'', query ? query : "");
 
     setFinalQuery(query);
     };
@@ -119,10 +116,16 @@ const SearchResources = () => {
   };
 
   useEffect(() => {
+    if (searchParams) {
+      setQuery(searchParams);
+      setFinalQuery(searchParams);
+    }
+    
     if (response.length) {
       setSearchResults(response);
     }
-}, [response]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response]);
   
   return (
     <div className="main-content">
@@ -147,7 +150,7 @@ const SearchResources = () => {
             className="search-btn" 
             variant="contained" 
             size="medium">Search</Button>
-            <Button className="category-btn"variant="contained" size="medium">Categories</Button>
+            <Button className="category-btn" variant="contained" size="medium">Categories</Button>
           </div>
         </form>
           {!searchResults.length &&

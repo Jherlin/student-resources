@@ -267,6 +267,24 @@ ul button:hover {
   font-size: 0.85rem;
 }
 
+.card span {
+  color: #4D5156;
+  font-size: 0.85rem;
+}
+
+.card svg {
+  font-size: 0.85rem;
+}
+
+.dicussion-btn:hover {
+  color: #1976D2;
+  cursor: pointer;
+}
+
+.dicussion-btn a:hover {
+  color: #1976D2;
+}
+
 .loadingSection {
   font-size: 0.8rem;
   margin: 10px 12px;
@@ -349,6 +367,13 @@ ul button:hover {
     font-size: 1rem;
   }
 
+  .card span {
+    font-size: 0.9rem;
+  }
+  
+  .card svg {
+    font-size: 0.9rem;
+  }
 }
 
 @media only screen and (min-width: 992px) {

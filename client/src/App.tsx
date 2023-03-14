@@ -8,6 +8,7 @@ import Dashboard from "./components/Dashboard";
 import Submittals from "./components/Submittals";
 import AdminPanel from "./components/AdminPanel";
 import SearchResources from "./components/SearchResources";
+import DiscussionBoard from "./components/DicussionBoard";
 
 function App() {
   return (
@@ -17,13 +18,14 @@ function App() {
           <Routes>
             <Route path="/"> 
               <Route index element={<SearchResources />}/> 
-              <Route path=":searchQuery" element={<SearchResources />}/>
+              <Route path="/search/:searchQuery" element={<SearchResources />}/>
             </Route> 
             <Route path="/register" element={<Register />}/> 
             <Route path="/login" element={<Login />}/> 
             <Route path="/dashboard" element={<Dashboard />}/> 
             <Route path="/submittals" element={<Submittals />}/> 
             <Route path="/admin" element={<AdminPanel />}/> 
+            <Route path="/discussion" element={<DiscussionBoard />}/> 
             <Route path="*" element={<NotFound />}/> 
           </Routes>
         </GlobalContextProvider>

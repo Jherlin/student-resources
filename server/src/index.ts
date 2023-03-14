@@ -240,7 +240,7 @@ app.put("/update-status", async (req, res) => {
   }
 
   try {
-    const data = await db.updatePendingStatus(resourceId);
+    const data = await db.updatePendingStatus(resourceId) as RowDataPacket;
     return res.json( data );
 } catch (error) {
     console.error(error);
@@ -258,6 +258,33 @@ app.delete("/delete-resource", async (req, res) => {
 
   try {
     const data = await db.deleteResource(resourceId);
+    return res.json( data );
+} catch (error) {
+    console.error(error);
+    res.status(403);
+    return res.sendStatus(403);
+  };
+})
+
+// fetching individual resource, names, and comments
+app.get("/fetch-resource/:resourceId", async (req, res) => {
+  const resourceId = req.params.resourceId;
+
+  try {
+    const data = await db.getResource(resourceId);
+    return res.json( data );
+} catch (error) {
+    console.error(error);
+    res.status(403);
+    return res.sendStatus(403);
+  };
+})
+
+app.get("/fetch-comments/:resourceId", async (req, res) => {
+  const resourceId = req.params.resourceId;
+
+  try {
+    const data = await db.getComments(resourceId) as RowDataPacket;
     return res.json( data );
 } catch (error) {
     console.error(error);
