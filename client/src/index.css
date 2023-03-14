@@ -290,6 +290,23 @@ ul button:hover {
   margin: 10px 12px;
 }
 
+/* Discussion Board Styles */
+.comment-form {
+  margin: 10px 12px;
+}
+
+.comment-draft {
+  width: 100%;
+}
+
+.comment-draft svg:hover {
+  color:#1976D2;
+}
+
+.comment-card {
+  margin: 10px 12px;
+}
+
 @media screen and (min-width: 768px) {
   .nav-bar {
     width: 95dvw;

@@ -293,6 +293,19 @@ app.get("/fetch-comments/:resourceId", async (req, res) => {
   };
 })
 
+app.post("/submit-comment", async (req, res) => {
+  const { content, time, resourceId, userId } = req.body;
+
+  try {
+    const data = await db.insertComment(content, time, resourceId, userId) as RowDataPacket;
+    return res.sendStatus(200);
+} catch (error) {
+    console.error(error);
+    res.status(403);
+    return res.sendStatus(403);
+  };
+})
+
 app.listen(3000, () => 
   {console.log(`⚡Server is listening on 3000`)});
 

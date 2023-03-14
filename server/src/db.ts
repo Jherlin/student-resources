@@ -8,14 +8,14 @@ export const connection = mysql.createConnection(<any>process.env.DATABASE_URL);
 
 export const insertUser = (firstname: string, lastname: string, username: string, hashedPassword: string) => {
   return new Promise((resolve, reject)=> {
-    const user_id = uuidv4();
+    const userId = uuidv4();
     const sql = "INSERT INTO person (id, first_name, last_name, username, password) VALUES (?, ?, ?, ?, ?)";
-    connection.query(sql,[user_id, firstname, lastname, username, hashedPassword], (error, result) => {
+    connection.query(sql,[userId, firstname, lastname, username, hashedPassword], (error, result) => {
       if(error){
         console.log(error);
         return reject(error.code);
       }
-        return resolve(user_id);
+        return resolve(userId);
     });
   });
 };
@@ -47,10 +47,10 @@ export const getUserByUsername = (username: string) => {
 
 export const insertRersource = (title: string, url: string, description: string, image: string, category: string, submittedBy: string, approvalPending: boolean) => {
   return new Promise((resolve, reject)=> {
-    const user_id = uuidv4();
+    const userId = uuidv4();
     const sql = "INSERT INTO resource (id, title, url, description, image, category, submitted_by, approval_pending) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    connection.query(sql,[user_id, title, url, description, image, category, submittedBy, approvalPending], (error, result) => {
+    connection.query(sql,[userId, title, url, description, image, category, submittedBy, approvalPending], (error, result) => {
       if(error){
         return reject(error);
       }
@@ -140,10 +140,24 @@ export const getResource = (resourceId: string) => {
 
 export const getComments = (resourceId: string) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT * FROM comment WHERE resource_id = ?";
+    const sql = "SELECT comment.id, comment.content, comment.time, person.first_name FROM comment INNER JOIN person ON comment.user_id=person.id WHERE resource_id=? ORDER BY time DESC";
     connection.query(sql, [resourceId,], (error, result) => {
       if(error){
         console.log(error);
+        return reject(error);
+      }
+        return resolve(result);
+    });
+  });
+};
+
+export const insertComment = (content: string, time: string, resourceId: string, userId: string) => {
+  return new Promise((resolve, reject)=> {
+    const commentId = uuidv4();
+    const sql = "INSERT INTO comment (id, content, time, resource_id, user_id) VALUES (?, ?, ?, ?, ?)";
+
+    connection.query(sql,[commentId, content, time, resourceId, userId], (error, result) => {
+      if(error){
         return reject(error);
       }
         return resolve(result);
