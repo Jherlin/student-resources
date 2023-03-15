@@ -6,30 +6,33 @@ import TextField from "@mui/material/TextField";
 import { useAxios } from "../useAxios";
 import Categories from "./Categories";
 import { Data } from "../@types/data";
-import axios from "axios";
 
 const SearchResources = () => {
   const params = useParams();
   const searchParams = params.searchQuery;
   const [searchResults, setSearchResults] = useState<Data[] | []>([]);
-  const [skipPages, setSkipPages] = useState(0);
-  const [loadMore, setLoadMore] = useState(false);
-  const [finalQuery, setFinalQuery] = useState("");
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
+  const [axiosParams, setAxiosParams] = useState({
+    skipPages: 0,
+    loadMore: false,
+    query: "",
+    finalQuery: "",
+    route: "/search-resources",
+    category: ""
+  })
+
   const { response, loading } = useAxios({
     method: "POST",
-    url: `${process.env.REACT_APP_BASE_URL}/search-resources`,
+    url: `${process.env.REACT_APP_BASE_URL}${axiosParams.route}`,
     withCredentials: true,
     headers: {
         "Access-Control-Allow-Origin": "*",
     },
     data: {
-      searchQuery : finalQuery, 
-      offset: skipPages
+      searchQuery : axiosParams.finalQuery, 
+      offset: axiosParams.skipPages
     }
     },
-    {loadStatus: loadMore});
+    {loadStatus: axiosParams.loadMore});
   
   let numberOfPages = 1;
 
@@ -37,17 +40,17 @@ const SearchResources = () => {
     numberOfPages = Math.ceil(searchResults.length  / 25)
   };
 
-  const getSearchResults = (query: string, event: FormEvent<HTMLFormElement> | null) => {
+  const getSearchResults = (event: FormEvent<HTMLFormElement> | null) => {
     if(event){
       event.preventDefault();
     };
 
-    if(query === "") {
+    if(axiosParams.query === "") {
       alert("Please enter a search query");
       return;
     };
 
-    setFinalQuery(query);
+    setAxiosParams({...axiosParams, route: "/search-resources", finalQuery: axiosParams.query})
     };
 
   const loadMoreResults = () => {
@@ -56,70 +59,47 @@ const SearchResources = () => {
       return;
     }
     
-    if(category){
+    if(axiosParams.category){
       loadMoreByCategory();
       return;
     }
 
     numberOfPages += 1;
     let paginationOffset = (numberOfPages - 1) * 25
-    setSkipPages(paginationOffset);
-    setLoadMore(true);
+    setAxiosParams({...axiosParams,route: "/search-resources", skipPages: paginationOffset, loadMore: true});
+  };
+
+  const searchCategory = (category: string) => {
+    console.log("Searching by category");
+    const offset = (numberOfPages - 1) * 25;
+
+    setAxiosParams({
+      ...axiosParams, 
+      route: "/search-category",
+      finalQuery: category,
+      skipPages: offset, 
+      loadMore: false});
   };
 
   const loadMoreByCategory = () => {
     numberOfPages += 1;
     const offset = (numberOfPages - 1) * 25;
 
-    axios
-    .post(`${process.env.REACT_APP_BASE_URL}/search-category`, {category, offset},{
-      withCredentials: true,
-      headers: {
-      "Access-Control-Allow-Origin": "*",
-      }
-    })
-    .then(response => {
-      if(!response.data.length) {
-        alert("There are no resources under this category as of current")
-      } else {
-        setSearchResults(prevState => {
-          return [...prevState, ...response.data]
-        })
-      }
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }
-
-  const searchCategory = (category: string) => {
-    console.log("Searching by category");
-    const offset = (numberOfPages - 1) * 25
-
-    axios
-      .post(`${process.env.REACT_APP_BASE_URL}/search-category`, {category, offset},{
-        withCredentials: true,
-        headers: {
-        "Access-Control-Allow-Origin": "*",
-        }
-      })
-      .then(response => {
-        if(!response.data.length) {
-          alert("There are no resources under this category as of current")
-        } else {
-          setSearchResults(response.data);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
+    setAxiosParams({
+      ...axiosParams, 
+      route: "/search-category",
+      finalQuery: axiosParams.category,
+      skipPages: offset, 
+      loadMore: true});
   };
 
   useEffect(() => {
     if (searchParams) {
-      setQuery(searchParams);
-      setFinalQuery(searchParams);
-    }
+      setAxiosParams({
+        ...axiosParams, 
+        finalQuery: searchParams
+      })
+    };
     
     if (response.length) {
       setSearchResults(response);
@@ -131,7 +111,7 @@ const SearchResources = () => {
     <div className="main-content">
       <div className="container">
         <form 
-        onSubmit={(e) => getSearchResults(query, e)} 
+        onSubmit={(e) => getSearchResults(e)} 
         className={!searchResults.length ? "search-form" : "search-form move-search-form"}>
           <h1>Student Resources</h1>
           <TextField
@@ -141,12 +121,12 @@ const SearchResources = () => {
           size="small"
           label="Search" 
           variant="outlined"
-          value={query} 
-          onChange={(e)=>setQuery(e.target.value)}
+          value={axiosParams.query} 
+          onChange={(e)=> setAxiosParams({...axiosParams, query: e.target.value})}
           type="text"/>
           <div className="search-bar-btns">
             <Button 
-            onClick={() => getSearchResults(query, null)}
+            onClick={() => getSearchResults(null)}
             className="search-btn" 
             variant="contained" 
             size="medium">Search</Button>
@@ -155,9 +135,9 @@ const SearchResources = () => {
         </form>
           {!searchResults.length &&
           <div className="categories-container">
-            <Categories searchCategory={searchCategory} setCategory={setCategory}/>
+            <Categories searchCategory={searchCategory} axiosParams={axiosParams} setAxiosParams={setAxiosParams}/>
           </div>}
-          <div className={!searchResults.length || (loading && !skipPages) ? "search-results" : "search-results show-search-results"}>
+          <div className={!searchResults.length || (loading && !axiosParams.skipPages) ? "search-results" : "search-results show-search-results"}>
             <SearchResults searchResults={searchResults} />
           </div>
           <div className="loadingSection">

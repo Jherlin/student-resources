@@ -5,7 +5,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import ReorderIcon from '@mui/icons-material/Reorder';
 
-const Categories = ( { searchCategory, setCategory }: any) => {
+const Categories = ( { searchCategory }: any) => {
   const categories = [
     {name: "Web Development", icon: <CodeIcon />}, 
     {name: "Database", icon: <StorageIcon />}, 
@@ -14,10 +14,9 @@ const Categories = ( { searchCategory, setCategory }: any) => {
     {name: "Data Structures & Algorithms", icon: <AccountTreeIcon />}, 
     {name: "Other", icon: <ReorderIcon /> }]
   
-    const handleClick = (category: string ) => {
-      setCategory(category);
-      searchCategory(category);
-    }
+  const handleClick = async (category: string ) => {
+    searchCategory(category)
+  };
 
   return (
     <>

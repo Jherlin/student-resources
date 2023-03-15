@@ -174,10 +174,10 @@ app.post("/search-resources", async (req, res) => {
 });
 
 app.post("/search-category", async (req, res) => {
-  const { category, offset } = req.body;
+  const { searchQuery, offset } = req.body;
 
   try {
-    const data = await db.getItemsByCategory(category, offset) as RowDataPacket;
+    const data = await db.getItemsByCategory(searchQuery, offset) as RowDataPacket;
     return res.json( data );
 } catch (error) {
     console.error(error);

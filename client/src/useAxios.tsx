@@ -39,7 +39,6 @@ export const useAxios = (axiosParams: any, pagination: any) => {
   };
 
   useEffect(() => {
-    console.log("useAxios");
     if(axiosParams.data.searchQuery) {
       fetchData(axiosParams, pagination);
     };
@@ -48,7 +47,7 @@ export const useAxios = (axiosParams: any, pagination: any) => {
       controller.abort();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [axiosParams.data.searchQuery, axiosParams.data.offset]);
+  }, [axiosParams.url, axiosParams.data.searchQuery, axiosParams.data.offset]);
   
   return { response, error, loading };
 }
