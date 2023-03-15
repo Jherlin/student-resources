@@ -101,7 +101,7 @@ export const deleteResource = (resourceId: string) => {
 
 export const getSearchItems = (searchQuery: string, offset: number) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT *, MATCH (title, url) AGAINST (?) as score FROM resource WHERE MATCH (title, url) AGAINST (?) > 0 ORDER BY score DESC LIMIT ?, 25";
+    const sql = "SELECT *, MATCH (title, url) AGAINST (?) as score FROM resource WHERE MATCH (title, url) AGAINST (?) > 0 AND approval_pending=0 ORDER BY score DESC LIMIT ?, 25";
     connection.query(sql, [searchQuery, searchQuery, offset], (error, result) => {
       if(error){
         console.log(error);
@@ -114,7 +114,7 @@ export const getSearchItems = (searchQuery: string, offset: number) => {
 
 export const getItemsByCategory = (category: string, offset: number) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT * FROM resource WHERE category = ? LIMIT ?, 25";
+    const sql = "SELECT * FROM resource WHERE category=? AND approval_pending=0 LIMIT ?, 25";
     connection.query(sql, [category, offset], (error, result) => {
       if(error){
         console.log(error);

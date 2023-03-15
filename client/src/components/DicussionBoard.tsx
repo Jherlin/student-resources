@@ -31,7 +31,6 @@ const DiscussionBoard = () => {
 
   const location = useLocation();
   const { resourceId } = location.state;
-  console.log(resourceId);
   
   const getResource = () => {
     axios
@@ -79,7 +78,8 @@ const DiscussionBoard = () => {
       alert("Please write some content before submitting");
       return;
     };
-    
+  
+    console.log(commentForm);
     axios
     .post(`${process.env.REACT_APP_BASE_URL}/submit-comment`, commentForm ,{
       withCredentials: true,
@@ -105,7 +105,7 @@ const DiscussionBoard = () => {
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
+    
     setCommentForm({
       content: event.target.value,
       time: currentTime,
@@ -163,7 +163,11 @@ return (
             <div className="comment-contents">
               <h4>{comment.first_name}</h4>
               <p>{comment.content}</p>
-              <span>{comment.time}</span>
+              <span>{new Date(comment.time + "Z").toLocaleString("en-US", {
+                localeMatcher: "best fit",
+                timeZoneName: "short"
+                })}
+              </span>
             </div>
           </div>
         )

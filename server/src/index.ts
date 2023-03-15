@@ -257,7 +257,7 @@ app.delete("/delete-resource", async (req, res) => {
   }
 
   try {
-    const data = await db.deleteResource(resourceId);
+    const data = await db.deleteResource(resourceId) as RowDataPacket;
     return res.json( data );
 } catch (error) {
     console.error(error);
