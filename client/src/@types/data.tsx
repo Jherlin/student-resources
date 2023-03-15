@@ -25,5 +25,6 @@ export interface CommentData {
   id: string,
   content: string,
   time: string,
+  user_id: string,
   first_name: string
 }

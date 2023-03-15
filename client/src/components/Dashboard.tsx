@@ -16,8 +16,12 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
-      {user.username && (<h1>Welcome to your dashboard {user.username}</h1>)}
+    <div className="main-content">
+      <div className="container">
+        <div>
+          {user.username && (<h1>Welcome to your dashboard {user.username}</h1>)}
+        </div>
+      </div>
     </div>
   );
 }

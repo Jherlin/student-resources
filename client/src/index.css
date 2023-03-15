@@ -164,7 +164,7 @@ ul button:hover {
   margin-top: 20px;
 }
 
-.container h1 {
+.homepage-title {
   padding: 10px 0px;
   font-weight: 400;
   font-size: 2.5rem;
@@ -307,6 +307,82 @@ ul button:hover {
   margin: 10px 12px;
 }
 
+.comment-datetime {
+  font-size: 0.9rem;
+}
+
+.comment-status {
+  margin: 10px 12px;
+  color:#4D5156;
+}
+
+.delete-btn {
+  display: inline;
+}
+
+.delete-btn:hover {
+  color:#1976D2;
+}
+
+.delete-btn button {
+  background-color: transparent;
+  border-width: 0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  display: inline-flex;
+}
+
+.delete-btn svg {
+  font-size: 1rem;
+}
+
+.loading-text {
+  margin: 10px 12px;
+  color: inherit;
+}
+
+/* Form Styling */
+.form-title {
+  padding: 20px 0px;
+  font-weight: 400;
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  width: 400px;
+  margin: auto auto;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  width: 400px;
+  margin: auto auto;
+}
+
+.resource-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+  width: 400px;
+  margin: auto auto;
+}
+
+.admin-header {
+  font-weight: 400;
+  font-size: 1.2rem;
+  margin: 0px 12px;
+} 
+
 @media screen and (min-width: 768px) {
   .nav-bar {
     width: 95dvw;
@@ -354,7 +430,7 @@ ul button:hover {
     margin-top: 20px;
   }
 
-  .container h1 {
+  .homepage-title {
     font-size: 2.9rem;
   }
 

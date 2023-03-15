@@ -3,6 +3,12 @@ import { FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { User, UserContextType } from "../@types/user";
 import GlobalContext from "../providers/GlobalContext"
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from "@mui/material/FormControl";
 
 const Submittals = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
@@ -18,10 +24,10 @@ const Submittals = () => {
     });
   const [error, setError] = useState<string | undefined>();
 
-  const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmitForm = (e: FormEvent<HTMLFormElement> | FormEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log(formData);
     setLoading(true);
+
     axios
         .post(`${process.env.REACT_APP_BASE_URL}/submit-resource`, formData, {
             withCredentials: true,
@@ -64,33 +70,44 @@ const Submittals = () => {
   }, []);
 
   return (
-    <div className="page-submittal">
-        <h1 className="title">Submit a Resource</h1>
-        {error && error}
-        <form onSubmit={(e)=> {onSubmitForm(e)}}>
-          <label>Link:</label>
-          <input
-              type="text"
-              name="url"
-              value={formData.url}
-              onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-          />
-          <label>Category:</label>
-          <select
-              name="category"
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value})}
-          >
-            <option value="Web Development">Web Development</option>
-            <option value="Database">Database</option>
-            <option value="YouTube Content">YouTube Content</option>
-            <option value="Educational Courses">Educational Courses</option>
-            <option value="Data Structures & Algorithms">Data Structures & Algorithms</option>
-            <option value="Other">Other</option>
-          </select>
-          <button>Submit</button>
-        </form>
-        {loading && <span>Loading...</span>}
+    <div className="main-content">
+      <div className="container">
+        <div className="page-submittal">
+            <h1 className="form-title">Submit a Resource</h1>
+            {error && error}
+            <form className="resource-form"onSubmit={e => onSubmitForm(e)}>
+              <TextField
+                required
+                autoComplete="off"
+                label="Link"
+                variant="filled"
+                value={formData.url}
+                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                />
+              <FormControl
+                onSubmit={(e)=> {onSubmitForm(e)}} 
+                variant="filled" 
+                >
+                <InputLabel id="demo-simple-select-filled-label">Category</InputLabel>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value})}
+                >
+                  <MenuItem value="Web Development">Web Development</MenuItem>
+                  <MenuItem value="Database">Database</MenuItem>
+                  <MenuItem value="YouTube Content">YouTube Content</MenuItem>
+                  <MenuItem value="Educational Courses">Educational Courses</MenuItem>
+                  <MenuItem value="Data Structures & Algorithms">Data Structures & Algorithms</MenuItem>
+                  <MenuItem value="Other">Other</MenuItem>
+                </Select>
+            </FormControl>
+            <Button type="submit" variant="contained">Submit</Button>
+          </form>
+          {loading && <span>Loading...</span>}
+        </div>
+      </div>
     </div>
   );
 };

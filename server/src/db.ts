@@ -101,7 +101,7 @@ export const deleteResource = (resourceId: string) => {
 
 export const getSearchItems = (searchQuery: string, offset: number) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT *, MATCH (title, url) AGAINST (?) as score FROM resource WHERE MATCH (title, url) AGAINST (?) > 0 ORDER BY score DESC LIMIT ?, 25";
+    const sql = "SELECT *, MATCH (title, url) AGAINST (?) as score FROM resource WHERE MATCH (title, url) AGAINST (?) > 0 AND approval_pending=0 ORDER BY score DESC LIMIT ?, 25";
     connection.query(sql, [searchQuery, searchQuery, offset], (error, result) => {
       if(error){
         console.log(error);
@@ -114,7 +114,7 @@ export const getSearchItems = (searchQuery: string, offset: number) => {
 
 export const getItemsByCategory = (category: string, offset: number) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT * FROM resource WHERE category = ? LIMIT ?, 25";
+    const sql = "SELECT * FROM resource WHERE category=? AND approval_pending=0 LIMIT ?, 25";
     connection.query(sql, [category, offset], (error, result) => {
       if(error){
         console.log(error);
@@ -140,7 +140,7 @@ export const getResource = (resourceId: string) => {
 
 export const getComments = (resourceId: string) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT comment.id, comment.content, comment.time, person.first_name FROM comment INNER JOIN person ON comment.user_id=person.id WHERE resource_id=? ORDER BY time DESC";
+    const sql = "SELECT comment.id, comment.content, comment.time, comment.user_id, person.first_name FROM comment INNER JOIN person ON comment.user_id=person.id WHERE resource_id=? ORDER BY time DESC";
     connection.query(sql, [resourceId,], (error, result) => {
       if(error){
         console.log(error);
@@ -158,6 +158,19 @@ export const insertComment = (content: string, time: string, resourceId: string,
 
     connection.query(sql,[commentId, content, time, resourceId, userId], (error, result) => {
       if(error){
+        return reject(error);
+      }
+        return resolve(result);
+    });
+  });
+};
+
+export const deleteComment = (commentId: string) => {
+  return new Promise((resolve, reject)=> {
+    const sql = "DELETE FROM comment WHERE id=?";
+    connection.query(sql, [commentId], (error, result) => {
+      if(error){
+        console.log(error);
         return reject(error);
       }
         return resolve(result);
