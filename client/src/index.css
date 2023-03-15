@@ -307,6 +307,44 @@ ul button:hover {
   margin: 10px 12px;
 }
 
+.comment-datetime {
+  font-size: 0.9rem;
+}
+
+.comment-status {
+  margin: 10px 12px;
+  color:#4D5156;
+}
+
+.delete-btn {
+  display: inline;
+}
+
+.delete-btn:hover {
+  color:#1976D2;
+}
+
+.delete-btn button {
+  background-color: transparent;
+  border-width: 0;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  display: inline-flex;
+}
+
+.delete-btn svg {
+  font-size: 1rem;
+}
+
+.loading-text {
+  margin: 10px 12px;
+  color: inherit;
+}
+
 @media screen and (min-width: 768px) {
   .nav-bar {
     width: 95dvw;

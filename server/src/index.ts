@@ -271,7 +271,7 @@ app.get("/fetch-resource/:resourceId", async (req, res) => {
   const resourceId = req.params.resourceId;
 
   try {
-    const data = await db.getResource(resourceId);
+    const data = await db.getResource(resourceId) as RowDataPacket;
     return res.json( data );
 } catch (error) {
     console.error(error);
@@ -296,9 +296,30 @@ app.get("/fetch-comments/:resourceId", async (req, res) => {
 app.post("/submit-comment", async (req, res) => {
   const { content, time, resourceId, userId } = req.body;
 
+  if (!req.sessionID || !req.session.user?.id) {
+    return res.sendStatus(403);
+  }
+  
   try {
     const data = await db.insertComment(content, time, resourceId, userId) as RowDataPacket;
     return res.sendStatus(200);
+} catch (error) {
+    console.error(error);
+    res.status(403);
+    return res.sendStatus(403);
+  };
+})
+
+app.delete("/delete-comment/:commentId/:userId", async (req, res) => {
+  const { commentId, userId } = req.params;
+
+  if (!req.sessionID || req.session.user?.id !== userId) {
+    return res.sendStatus(403);
+  }
+
+  try {
+    const data = await db.deleteComment(commentId) as RowDataPacket;
+    return res.json( data );
 } catch (error) {
     console.error(error);
     res.status(403);

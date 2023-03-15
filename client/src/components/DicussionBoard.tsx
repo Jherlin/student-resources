@@ -7,6 +7,7 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import { InputAdornment } from "@mui/material";
 import { User, UserContextType } from "../@types/user";
 import GlobalContext from "../providers/GlobalContext";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const DiscussionBoard = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
@@ -28,48 +29,52 @@ const DiscussionBoard = () => {
     resourceId: "",
     userId: ""
   });
-
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
   const { resourceId } = location.state;
   
-  const getResource = () => {
-    axios
-    .get(`${process.env.REACT_APP_BASE_URL}/fetch-resource/${resourceId}`,{
-      withCredentials: true,
-      headers: {
-      "Access-Control-Allow-Origin": "*",
-      }
-    })
-    .then(response => {
-      setResource(response.data[0]);
-      getComments();
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }
+  const getResource = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fetch-resource/${resourceId}`,{
+        withCredentials: true,
+        headers: {
+        "Access-Control-Allow-Origin": "*",
+        }
+      })
 
-  const getComments = () => {
-    axios
-    .get(`${process.env.REACT_APP_BASE_URL}/fetch-comments/${resourceId}`,{
-      withCredentials: true,
-      headers: {
-      "Access-Control-Allow-Origin": "*",
+      if (response.status === 200) {
+        setResource(response.data[0]);
+        getComments();
       }
-    })
-    .then(response => {
+    } catch (error) {
+      console.log(error);
+    };
+  };
+
+  const getComments = async () => {
+    setLoading(true);
+
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fetch-comments/${resourceId}`,{
+        withCredentials: true,
+        headers: {
+        "Access-Control-Allow-Origin": "*",
+        }
+      })
+
       if(response.data && response.data.length === 0){
         console.log("There were no comments found in the database");
-      } else {
+      } else if (response.status === 200) {
         setComments(response.data)
-      }
-    })
-    .catch(error => {
+      };
+    } catch (error) {
       console.log(error);
-    })
-  }
+    } finally {
+      setLoading(false);
+    };
+  };
 
-  const submitComment = () => {
+  const submitComment = async () => {
     if(!user.id) {
       return;
     }
@@ -78,16 +83,15 @@ const DiscussionBoard = () => {
       alert("Please write some content before submitting");
       return;
     };
-  
-    console.log(commentForm);
-    axios
-    .post(`${process.env.REACT_APP_BASE_URL}/submit-comment`, commentForm ,{
-      withCredentials: true,
-      headers: {
-      "Access-Control-Allow-Origin": "*",
-      }
-    })
-    .then(response => {
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/submit-comment`, commentForm ,{
+        withCredentials: true,
+        headers: {
+        "Access-Control-Allow-Origin": "*",
+        }
+      })
+
       if(response.status === 200) {
         setCommentForm({
           content: "",
@@ -97,11 +101,10 @@ const DiscussionBoard = () => {
         });
         getComments();
       };
-    })
-    .catch(error => {
+    } catch (error) {
       console.log(error);
-    })
-  }
+    };
+  };
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -112,6 +115,25 @@ const DiscussionBoard = () => {
       resourceId: resourceId,
       userId: user.id
     });
+  };
+
+  const handleClick = async (commentId: string, userId: string) => {
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/delete-comment/${commentId}/${userId}` ,{
+        withCredentials: true,
+        headers: {
+        "Access-Control-Allow-Origin": "*",
+        }
+      })
+
+      if(response.status === 200) {
+        setComments((prev) => prev.filter((item) => {
+          return item.id !== commentId
+        }))
+      };
+    } catch (error) {
+      console.log(error);
+    };
   };
 
   useEffect(() => {
@@ -157,22 +179,25 @@ return (
             }}
           />
         </form>
+        {loading && <div className="loading-text">Loading...</div>}
         {comments.length ? comments.map( comment => {
         return(
           <div className="comment-card" key={comment.id}>
             <div className="comment-contents">
               <h4>{comment.first_name}</h4>
               <p>{comment.content}</p>
-              <span>{new Date(comment.time + "Z").toLocaleString("en-US", {
+              <span className="comment-datetime">{new Date(comment.time + "Z").toLocaleString("en-US", {
                 localeMatcher: "best fit",
                 timeZoneName: "short"
-                })}
-              </span>
+                } )} </span>
+              <div className="delete-btn">
+                {user.id === comment.user_id && <button onClick={() => handleClick(comment.id, comment.user_id)}>· Delete <DeleteIcon /></button>}
+              </div>
             </div>
           </div>
         )
         }) :
-          <p>There are no comments as of yet...</p>}
+          <p className="comment-status">There are no comments as of yet...</p>}
       </div>
     </div>
   </div>
