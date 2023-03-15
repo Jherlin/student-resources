@@ -53,13 +53,19 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-    const { firstname, lastname, username, password } = req.body;
+    const { firstname, lastname, username, password, confirmPassword } = req.body;
 
-    if ( !firstname || !lastname || !username || !password) {
+    if ( !firstname || !lastname || !username || !password || !confirmPassword) {
       console.log("Missing fields");
       res.status(403);
       return res.send("Missing fields");
     };
+
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match")
+      res.status(403);
+      return res.send("Passwords do not match");
+    }
 
     if (password.length < 6) {
       console.log("Password is too short");
@@ -164,7 +170,8 @@ app.post("/search-resources", async (req, res) => {
   const { searchQuery, offset } = req.body;
 
   try {
-    const data = await db.getSearchItems(searchQuery, offset);
+    const data = await db.getSearchItems(searchQuery, offset) as RowDataPacket;
+    console.log(data.length);
     return res.json( data );
 } catch (error) {
     console.error(error);

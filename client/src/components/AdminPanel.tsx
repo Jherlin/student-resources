@@ -85,10 +85,15 @@ const AdminPanel = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Administrator Panel</h1>
-      {error && error}
-      {data && <PendingRequests data={data} acceptRequest={acceptRequest} declineRequest={declineRequest}/>}
+    <div className="main-content">
+      <div className="container">
+        <div className="admin-header">
+          <h1>Administrator Panel</h1>
+          <h2>Resources Pending Approval:</h2> 
+        </div>
+        {error && error}
+        {data && <PendingRequests data={data} acceptRequest={acceptRequest} declineRequest={declineRequest}/>}
+      </div>
     </div>
   );
 }

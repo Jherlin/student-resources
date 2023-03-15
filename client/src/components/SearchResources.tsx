@@ -40,7 +40,7 @@ const SearchResources = () => {
     numberOfPages = Math.ceil(searchResults.length  / 25)
   };
 
-  const getSearchResults = (event: FormEvent<HTMLFormElement> | null) => {
+  const getSearchResults = (event: FormEvent<HTMLFormElement>) => {
     if(event){
       event.preventDefault();
     };
@@ -113,7 +113,7 @@ const SearchResources = () => {
         <form 
         onSubmit={(e) => getSearchResults(e)} 
         className={!searchResults.length ? "search-form" : "search-form move-search-form"}>
-          <h1>Student Resources</h1>
+          <h1 className="homepage-title">Student Resources</h1>
           <TextField
           autoComplete="off"
           className="search-bar" 
@@ -126,7 +126,7 @@ const SearchResources = () => {
           type="text"/>
           <div className="search-bar-btns">
             <Button 
-            onClick={() => getSearchResults(null)}
+            type="submit"
             className="search-btn" 
             variant="contained" 
             size="medium">Search</Button>

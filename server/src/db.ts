@@ -167,7 +167,7 @@ export const insertComment = (content: string, time: string, resourceId: string,
 
 export const deleteComment = (commentId: string) => {
   return new Promise((resolve, reject)=> {
-    const sql = "DELETE FROM comment WHERE id = ?";
+    const sql = "DELETE FROM comment WHERE id=?";
     connection.query(sql, [commentId], (error, result) => {
       if(error){
         console.log(error);

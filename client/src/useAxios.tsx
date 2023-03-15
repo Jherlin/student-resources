@@ -29,6 +29,7 @@ export const useAxios = (axiosParams: any, pagination: any) => {
         return [...prevState, ...response.data]})
       } else if(response.status === 200) {
         updateBrowserUrl();
+        console.log(response.data);
         setResponse(response.data);
       };
     } catch (error) {
