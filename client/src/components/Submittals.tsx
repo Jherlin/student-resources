@@ -64,7 +64,10 @@ const Submittals = () => {
 
   useEffect(() => {
     if (!user.id){
-      navigate("/login");
+      navigate("/login", { 
+        state: { 
+          route: "/submittals"
+        }});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

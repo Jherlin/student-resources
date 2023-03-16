@@ -53,9 +53,9 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/register", async (req, res) => {
-    const { firstname, lastname, username, password, confirmPassword } = req.body;
+    const { firstName, lastName, email, password, confirmPassword, dateJoined, role } = req.body;
 
-    if ( !firstname || !lastname || !username || !password || !confirmPassword) {
+    if ( !firstName || !lastName || !email || !password || !confirmPassword) {
       console.log("Missing fields");
       res.status(403);
       return res.send("Missing fields");
@@ -75,18 +75,20 @@ app.post("/register", async (req, res) => {
 
     try {
       const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-      const data = await db.insertUser(firstname, lastname, _.lowerCase(username), hashedPassword)
+      const data = await db.insertUser(_.upperFirst(firstName), _.upperFirst(lastName), _.toLower(email), hashedPassword, dateJoined, role)
         .then(userID => { 
           return db.getUserById(<string>userID) as RowDataPacket;
         });
 
       const user = data[0];
-
+      
       req.session.user = {
         id: user.id,
-        firstname: user.first_name,
-        lastname: user.last_name,
-        username: user.username
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        dateJoined: user.date_joined,
+        role: user.role
       };
 
       return res.json({ user: req.session.user });
@@ -103,15 +105,15 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
+  if (!email || !password) {
     console.log("Missing fields")
     return res.sendStatus(403);
     }
 
   try {
-    const data = await db.getUserByUsername(username) as RowDataPacket;
+    const data = await db.getUserByEmail(email) as RowDataPacket;
 
     if (data.length === 0) {
       console.log("User was not found");
@@ -130,9 +132,11 @@ app.post("/login", async (req, res) => {
 
     req.session.user = {
       id: user.id,
-      firstname: user.first_name,
-      lastname: user.last_name,
-      username: user.username
+      firstName: user.first_name,
+      lastName: user.last_name,
+      email: user.email,
+      dateJoined: user.date_joined,
+      role: user.role
     };
 
     return res.json({ user: req.session.user });
@@ -163,6 +167,18 @@ app.get("/fetch-user", async (req, res) => {
     return res.json({ user: req.session.user });
   }
   return res.sendStatus(403);
+})
+
+app.get("/fetch-userstats/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const data = await db.getUserStats(userId) as RowDataPacket;
+    return res.json( data[0] );
+  } catch (error) {
+      console.log(error);
+      return res.sendStatus(403);
+  }
 })
 
 // Search engine
@@ -225,7 +241,7 @@ app.post("/submit-resource", async (req, res) => {
 });
 
 app.post("/fetch-pending", async (req, res) => {
-  if (!req.sessionID || req.session.user?.username !== "admin") {
+  if (!req.sessionID || req.session.user?.role !== "Admin") {
     return res.sendStatus(403);
   }
 
@@ -242,7 +258,7 @@ app.post("/fetch-pending", async (req, res) => {
 app.put("/update-status", async (req, res) => {
   const { resourceId } = req.body;
 
-  if (!req.sessionID || req.session.user?.username !== "admin") {
+  if (!req.sessionID || req.session.user?.role !== "Admin") {
     return res.sendStatus(403);
   }
 
@@ -259,7 +275,7 @@ app.put("/update-status", async (req, res) => {
 app.delete("/delete-resource", async (req, res) => {
   const { resourceId } = req.body;
 
-  if (!req.sessionID || req.session.user?.username !== "admin") {
+  if (!req.sessionID || req.session.user?.role !== "Admin") {
     return res.sendStatus(403);
   }
 

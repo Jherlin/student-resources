@@ -10,7 +10,6 @@ const AdminPanel = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
   const user = globalContext.user as User;
   const navigate = useNavigate();
-
   const [data, setData] = useState<Data[] | []>([]);
   const [error, setError] = useState<string | undefined>();
 
@@ -64,7 +63,6 @@ const AdminPanel = () => {
         })
         .then((response) => {
             if (response.status === 200) {
-                console.log(response.data);
                 setData(response.data);
             }
         })
@@ -75,10 +73,12 @@ const AdminPanel = () => {
     };
 
   useEffect(() => {
-    console.log(user);
-    if (user.username !== "admin"){
-      navigate("/");
-    };
+    if (user.role !== "Admin"){
+      return navigate("/login", { 
+        state: { 
+          route: "/admin"
+        }});
+    }
 
     getPendingRequests();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,10 +87,12 @@ const AdminPanel = () => {
   return (
     <div className="main-content">
       <div className="container">
+        {user.role === "Admin" &&
         <div className="admin-header">
           <h1>Administrator Panel</h1>
           <h2>Resources Pending Approval:</h2> 
         </div>
+        }
         {error && error}
         {data && <PendingRequests data={data} acceptRequest={acceptRequest} declineRequest={declineRequest}/>}
       </div>

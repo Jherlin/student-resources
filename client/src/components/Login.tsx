@@ -1,5 +1,5 @@
-import { useState, useContext, FormEvent } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useContext, FormEvent, useEffect } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 import axios from "axios";
 import GlobalContext from "../providers/GlobalContext"
 import { UserContextType } from "../@types/user";
@@ -7,13 +7,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 const Login = () => {
-    const globalContext = useContext(GlobalContext) as UserContextType;
+    const { user, fetchingUser, setUser } = useContext(GlobalContext) as UserContextType;
     const navigate = useNavigate();
-
+    const { state } = useLocation();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
     const [formData, setFormData] = useState({
-        username: "",
+        email: "",
         password: "",
     })
 
@@ -30,7 +30,7 @@ const Login = () => {
         })
         
         if (response.status === 200) {
-          globalContext.setUser(response.data.user);
+          setUser(response.data.user);
           navigate("/dashboard");
         }
       } catch (error) {
@@ -40,19 +40,32 @@ const Login = () => {
       }
     };
 
+    useEffect(() => {
+      if (user.id && state.route === "/submittals") {
+        navigate("/submittals")
+      } else if (user.id && state.route === "/dashboard") {
+        navigate("/dashboard")
+      } else if (user.role === "Admin" && state.route === "/admin") {
+        navigate("/admin")
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
+    
     return (
       <div className="main-content">
         <div className="container">
+          {!fetchingUser &&
+          <>
           <h1 className="form-title">Login</h1>
             {error && error}
             <form className="login-form" onSubmit={(e) => onSubmitForm(e)}> 
               <TextField
               required
               autoComplete="off"
-              label="Username"
+              label="Email"
               variant="filled"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}/>
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}/>
               <TextField
               required
               label="Password"
@@ -62,6 +75,8 @@ const Login = () => {
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}/>
               <Button type="submit" variant="contained">Login</Button>
             </form>
+            </>
+            }
             {loading && <p>Loading...</p>}
         </div>
       </div>

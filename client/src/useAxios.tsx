@@ -17,7 +17,7 @@ export const useAxios = (axiosParams: any, pagination: any) => {
 
   const fetchData = async (params: any, pagination: any) => {
     setLoading(true);
-    
+    console.log("Searching database...")
     try {
       const response = await axios.request({...params, signal: controller.signal});
 

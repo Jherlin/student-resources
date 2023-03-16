@@ -1,4 +1,4 @@
-import { useState, useContext, FormEvent } from "react"
+import { useState, useContext, FormEvent, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import GlobalContext from "../providers/GlobalContext"
@@ -7,17 +7,20 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 const Register = () => {
-    const globalContext = useContext(GlobalContext) as UserContextType;
+    const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const { user, setUser } = useContext(GlobalContext) as UserContextType;
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
     const [formData, setFormData] = useState({
-        firstname: "",
-        lastname: "",
-        username: "",
+        firstName: "",
+        lastName: "",
+        email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        dateJoined: currentTime,
+        role: "User"
     });
 
     const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
@@ -34,7 +37,7 @@ const Register = () => {
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response.data.user);
-                    globalContext.setUser(response.data.user);
+                    setUser(response.data.user);
                     navigate("/dashboard");
                 }
             })
@@ -46,6 +49,13 @@ const Register = () => {
             });
     };
 
+    useEffect(() => {
+      if (user.id){
+        navigate("/dashboard");
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
+    
     return (
       <div className="main-content">
         <div className="container">
@@ -56,23 +66,24 @@ const Register = () => {
               required
               label="First Name"
               variant="filled"
-              value={formData.firstname}
-              onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
+              value={formData.firstName}
+              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             />
             <TextField
               required
               label="Last Name"
               variant="filled"
-              value={formData.lastname}
-              onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+              value={formData.lastName}
+              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             />
             <TextField
               required
               autoComplete="off"
-              label="Username"
+              label="Email"
               variant="filled"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
             <TextField
               required
@@ -92,7 +103,7 @@ const Register = () => {
             />
             <Button type="submit" variant="contained">Register</Button>
           </form>
-              {loading && <p>Loading...</p>}
+            {loading && <p>Loading...</p>}
         </div>
       </div>
     )

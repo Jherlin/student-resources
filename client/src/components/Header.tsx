@@ -26,7 +26,14 @@ const Header = () => {
             })
             .then((response) => {
                 if (response.status === 200) {
-                    globalContext.setUser({});
+                    globalContext.setUser({
+                      id: "",
+                      firstName: "",
+                      lastName: "",
+                      email: "",
+                      password: "",
+                      role: ""
+                    });
                     navigate("/");
                 } else {
                     throw new Error()
@@ -64,26 +71,26 @@ const Header = () => {
     }
 
     return (
-        <header>
-          <nav className={toggle ? "overlay" : "nav-bar"}>
-            <div className={toggle ? "navbar-left-container hide-search-icon " : "navbar-left-container"}>
-              <Link to="/"><SearchIcon onClick={refreshPage}/></Link>
-            </div>
-            <div className={toggle ? "hide-menu" : "menu"}>
-              <MenuIcon onClick={() => setToggle(prev => !prev)}/>
-            </div>
-            <ul className={toggle ? "overlay-content" : "navbar-right-container"} style={{width: user.id && "460px"}}>
-              <li onClick={handleToggle} className="close-icon"><CloseIcon /></li>
-              <li onClick={handleToggle}><Link to="/" onClick={refreshPage}>Home</Link></li>
-              <li onClick={handleToggle}><Link to="/submittals">Submit a Resource</Link></li>
-              {!user.id ? 
-              <li onClick={handleToggle}><Link to="/register">Register</Link></li> :
-              <li onClick={handleToggle}><Link to="/dashboard">Dashboard</Link></li>}
-              {user.username === "admin" && <li onClick={handleToggle}><Link to="/admin">Admin Panel</Link></li>}
-              {user.id ? (<button onClick={logout}>Logout</button>) : (<button onClick={handleLogin}>Login</button>)}
-            </ul>  
-          </nav>
-        </header>
+      <header>
+      <nav className={toggle ? "overlay" : "nav-bar"}>
+        <div className={toggle ? "navbar-left-container hide-search-icon " : "navbar-left-container"}>
+          <Link to="/"><SearchIcon onClick={refreshPage}/></Link>
+        </div>
+        <div className={toggle ? "hide-menu" : "menu"}>
+          <MenuIcon onClick={() => setToggle(prev => !prev)}/>
+        </div>
+        <ul className={toggle ? "overlay-content" : "navbar-right-container"} style={{width: user.id && "460px"}}>
+          <li onClick={handleToggle} className="close-icon"><CloseIcon /></li>
+          <li onClick={handleToggle}><Link to="/" onClick={refreshPage}>Home</Link></li>
+          <li onClick={handleToggle}><Link to="/submittals">Submit a Resource</Link></li>
+          {!user.id ? 
+          <li onClick={handleToggle}><Link to="/register">Register</Link></li> :
+          <li onClick={handleToggle}><Link to="/dashboard">Dashboard</Link></li>}
+          {user.role === "Admin" && <li onClick={handleToggle}><Link to="/admin">Admin Panel</Link></li>}
+          {user.id ? (<button onClick={logout}>Logout</button>) : (<button onClick={handleLogin}>Login</button>)}
+        </ul>  
+      </nav>
+    </header>
     )
 }
 

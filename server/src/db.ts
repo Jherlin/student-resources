@@ -6,11 +6,11 @@ dotenv.config();
 
 export const connection = mysql.createConnection(<any>process.env.DATABASE_URL);
 
-export const insertUser = (firstname: string, lastname: string, username: string, hashedPassword: string) => {
+export const insertUser = (firstName: string, lastName: string, email: string, hashedPassword: string, dateJoined: string, role: string) => {
   return new Promise((resolve, reject)=> {
     const userId = uuidv4();
-    const sql = "INSERT INTO person (id, first_name, last_name, username, password) VALUES (?, ?, ?, ?, ?)";
-    connection.query(sql,[userId, firstname, lastname, username, hashedPassword], (error, result) => {
+    const sql = "INSERT INTO person (id, first_name, last_name, email, password, date_joined, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    connection.query(sql,[userId, firstName, lastName, email, hashedPassword, dateJoined, role], (error, result) => {
       if(error){
         console.log(error);
         return reject(error.code);
@@ -33,10 +33,10 @@ export const getUserById = (id: string) => {
   });
 };
 
-export const getUserByUsername = (username: string) => {
+export const getUserByEmail= (email: string) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT * FROM person WHERE username = ?";
-    connection.query(sql, [username], (error, user) => {
+    const sql = "SELECT * FROM person WHERE email = ?";
+    connection.query(sql, [email], (error, user) => {
       if(error){
         return reject(error);
       }
@@ -173,6 +173,20 @@ export const deleteComment = (commentId: string) => {
         console.log(error);
         return reject(error);
       }
+        return resolve(result);
+    });
+  });
+};
+
+export const getUserStats = (id: string) => {
+  return new Promise((resolve, reject)=> {
+    const sql = "SELECT person.date_joined, resource.count(*) as count FROM resource INNER JOIN person ON resource.submitted_by=person.id WHERE submitted_by=?"
+    connection.query(sql, [id], (error, result) => {
+      if(error){
+        console.log(error);
+        return reject(error);
+      }
+        console.log(result)
         return resolve(result);
     });
   });

@@ -10,6 +10,7 @@ import { Data } from "../@types/data";
 const SearchResources = () => {
   const params = useParams();
   const searchParams = params.searchQuery;
+  const [toggle, setToggle] = useState(false);
   const [searchResults, setSearchResults] = useState<Data[] | []>([]);
   const [axiosParams, setAxiosParams] = useState({
     skipPages: 0,
@@ -33,7 +34,7 @@ const SearchResources = () => {
     }
     },
     {loadStatus: axiosParams.loadMore});
-  
+
   let numberOfPages = 1;
 
   if(searchResults.length > 25) {
@@ -93,6 +94,27 @@ const SearchResources = () => {
       loadMore: true});
   };
 
+  const refreshPage = () => {
+    const homeUrl = window.location.protocol + "//" + window.location.host + "/";
+    const pathName = window.location.pathname;
+
+    if (pathName === "/" ) {
+      console.log("hey")
+      setToggle(prev => !prev);
+      return;
+    }
+
+    if (pathName === "/register" || 
+      pathName === "/login" || 
+      pathName === "/dashboard" || 
+      pathName === "/submittals" || 
+      pathName === "/admin") {
+      return;
+    };
+  
+    window.location.replace(homeUrl);
+  };
+
   useEffect(() => {
     if (searchParams) {
       setAxiosParams({
@@ -130,11 +152,15 @@ const SearchResources = () => {
             className="search-btn" 
             variant="contained" 
             size="medium">Search</Button>
-            <Button className="category-btn" variant="contained" size="medium">Categories</Button>
+            <Button 
+            className="category-btn"
+            variant="contained"
+            onClick={refreshPage}
+            size="medium">Categories</Button>
           </div>
         </form>
           {!searchResults.length &&
-          <div className="categories-container">
+          <div className={toggle ? "categories-container hightlight-categories" : "categories-container"}>
             <Categories searchCategory={searchCategory} axiosParams={axiosParams} setAxiosParams={setAxiosParams}/>
           </div>}
           <div className={!searchResults.length || (loading && !axiosParams.skipPages) ? "search-results" : "search-results show-search-results"}>

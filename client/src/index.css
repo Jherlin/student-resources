@@ -190,6 +190,10 @@ ul button:hover {
   margin: 70px 12px;
 }
 
+.hightlight-categories {
+  border:0.13rem solid #1976D2;
+}
+
 .category-card {
   display: flex;
   flex-direction: column;
@@ -198,7 +202,10 @@ ul button:hover {
   text-align: center;
   width: 100%;
   flex: 50%;
-  margin-bottom: 30px;
+}
+
+.category-content {
+  padding: 10px;
 }
 
 .category-card h2 {
@@ -206,7 +213,7 @@ ul button:hover {
 }
 
 .category-card:hover {
-  box-shadow: 0 1px 1px 0 rgba(0,0,0,1);
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
 }
 
 .category-icon svg {
@@ -291,8 +298,12 @@ ul button:hover {
 }
 
 /* Discussion Board Styles */
+.comment-section {
+  margin-top: 10px;
+}
+
 .comment-form {
-  margin: 10px 12px;
+  margin: 0px 12px;
 }
 
 .comment-draft {
@@ -311,9 +322,15 @@ ul button:hover {
   font-size: 0.9rem;
 }
 
+.user-firstname {
+  color:#4D5156;
+  font-size: 0.9rem;
+}
+
 .comment-status {
   margin: 10px 12px;
   color:#4D5156;
+  font-size: 0.9rem;
 }
 
 .delete-btn {
@@ -377,11 +394,22 @@ ul button:hover {
   margin: auto auto;
 }
 
+/* Admin Panel Styling */
 .admin-header {
-  font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1rem;
   margin: 0px 12px;
 } 
+
+/* Dashboard Styling */
+.dashboard-card {
+  margin: 10px 12px;
+}
+
+.user-stats {
+  margin-top: 20px;
+  font-size: 1rem;
+  line-height: 1.4rem;
+}
 
 @media screen and (min-width: 768px) {
   .nav-bar {
@@ -467,6 +495,25 @@ ul button:hover {
   .card svg {
     font-size: 0.9rem;
   }
+
+  .comment-section {
+    margin-top: -9px;
+  }
+
+  .user-firstname {
+    font-size: 1rem;
+  }
+  
+  .comment-status {
+    font-size: 1rem;
+  }
+
+  /* Dashboard Styling */
+  .user-stats {
+    margin-top: 20px;
+    font-size: 1.1rem;
+    line-height: 1.4rem;
+}
 }
 
 @media only screen and (min-width: 992px) {

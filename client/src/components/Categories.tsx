@@ -26,10 +26,12 @@ const Categories = ( { searchCategory }: any) => {
           className="category-card" 
           key={idx} 
           onClick={()=> handleClick(item.name)}>
+            <div className="category-content">
               <h2>{item.name}</h2>
               <div className="category-icon">
                 {item.icon}
               </div>
+            </div>
           </div>
         )
       })}
