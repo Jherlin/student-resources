@@ -1,6 +1,6 @@
 import { useState, useContext, FormEvent, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import GlobalContext from "../providers/GlobalContext"
 import { UserContextType } from "../@types/user";
 import TextField from '@mui/material/TextField';
@@ -12,7 +12,7 @@ const Register = () => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | undefined>();
+    const [error, setError] = useState<string>("");
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -23,30 +23,28 @@ const Register = () => {
         role: "User"
     });
 
-    const onSubmitForm = (e: FormEvent<HTMLFormElement>) => {
+    const onSubmitForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
-        console.log("Submitting register form")
-        axios
-            .post(`${process.env.REACT_APP_BASE_URL}/register`, formData, {
-                withCredentials: true,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                },
-            })
-            .then((response) => {
-                if (response.status === 200) {
-                    console.log(response.data.user);
-                    setUser(response.data.user);
-                    navigate("/dashboard");
-                }
-            })
-            .catch((error) => {
-                setError(error.response.data);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
+
+        try {
+          const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, formData, {
+            withCredentials: true,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+            },
+          })
+
+          if (response.status === 200) {
+            setUser(response.data.user);
+            navigate("/dashboard");
+            }
+        } catch (error) {
+          const err = error as AxiosError;
+          setError(err.response?.data as string);
+        } finally {
+          setLoading(false);
+        };
     };
 
     useEffect(() => {
@@ -60,7 +58,7 @@ const Register = () => {
       <div className="main-content">
         <div className="container">
           <h1 className="form-title">Register</h1>
-          {error && error}
+          <div className="form-error">{error && error}</div>
           <form className="register-form" onSubmit={(e)=> {onSubmitForm(e)}}>
             <TextField
               required
@@ -103,7 +101,7 @@ const Register = () => {
             />
             <Button type="submit" variant="contained">Register</Button>
           </form>
-            {loading && <p>Loading...</p>}
+          {loading && <p className="form-loading-text">Loading...</p>}
         </div>
       </div>
     )

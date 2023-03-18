@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import { User, UserContextType } from "../@types/user";
@@ -14,7 +14,6 @@ const Submittals = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
   const user = globalContext.user as User;
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     url: "",
@@ -22,44 +21,30 @@ const Submittals = () => {
     submittedBy: user.id,
     approvalPending: true
     });
-  const [error, setError] = useState<string | undefined>();
+  const [error, setError] = useState<string>("");
 
-  const onSubmitForm = (e: FormEvent<HTMLFormElement> | FormEvent<HTMLDivElement>) => {
+  const onSubmitForm = async (e: FormEvent<HTMLFormElement> | FormEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setLoading(true);
 
-    axios
-        .post(`${process.env.REACT_APP_BASE_URL}/submit-resource`, formData, {
-            withCredentials: true,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-            },
-        })
-        .then((response) => {
-            if (response.status === 200) {
-                console.log(response.data);
-                setFormData({
-                  title: "",
-                  url: "",
-                  category: "Other",
-                  submittedBy: user.id,
-                  approvalPending: true
-                  });
-            }
-        })
-        .catch((error) => {
-          setError(error.response.data);
-          setFormData({
-            title: "",
-            url: "",
-            category: "Other",
-            submittedBy: user.id,
-            approvalPending: true
-            });
-        })
-        .finally(() => {
-          setLoading(false)
-        });
+    setFormData({
+      title: "",
+      url: "",
+      category: "Other",
+      submittedBy: user.id,
+      approvalPending: true
+      });
+
+    try {
+      await axios.post(`${process.env.REACT_APP_BASE_URL}/submit-resource`, formData, {
+        withCredentials: true,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+        },
+      })
+    } catch (error) {
+      const err = error as AxiosError;
+      setError(err.response?.data as string);
+      }
     };
 
   useEffect(() => {
@@ -77,7 +62,7 @@ const Submittals = () => {
       <div className="container">
         <div className="page-submittal">
             <h1 className="form-title">Submit a Resource</h1>
-            {error && error}
+            <div className="form-error">{error && error}</div>
             <form className="resource-form"onSubmit={e => onSubmitForm(e)}>
               <TextField
                 required
@@ -108,7 +93,6 @@ const Submittals = () => {
             </FormControl>
             <Button type="submit" variant="contained">Submit</Button>
           </form>
-          {loading && <span>Loading...</span>}
         </div>
       </div>
     </div>

@@ -5,7 +5,6 @@ import { Data } from "./@types/data";
 export const useAxios = (axiosParams: any, pagination: any) => {
   const [response, setResponse] = useState<Data[] | []>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
   const controller = new AbortController();
 
   const updateBrowserUrl = () => {
@@ -21,7 +20,7 @@ export const useAxios = (axiosParams: any, pagination: any) => {
     try {
       const response = await axios.request({...params, signal: controller.signal});
 
-      if(response.data && response.data.length === 0){
+      if (response.data && response.data.length === 0){
         alert("There were no resources found in the database");
       } else if (pagination.loadStatus === true) {
         updateBrowserUrl();
@@ -32,7 +31,7 @@ export const useAxios = (axiosParams: any, pagination: any) => {
         setResponse(response.data);
       };
     } catch (error) {
-      setError(error as any);
+      console.log(error)
     } finally {
       setLoading(false);
     }
@@ -49,5 +48,5 @@ export const useAxios = (axiosParams: any, pagination: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [axiosParams.url, axiosParams.data.searchQuery, axiosParams.data.offset]);
   
-  return { response, error, loading };
+  return { response, loading };
 }

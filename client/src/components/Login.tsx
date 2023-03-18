@@ -1,6 +1,6 @@
 import { useState, useContext, FormEvent, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import GlobalContext from "../providers/GlobalContext"
 import { UserContextType } from "../@types/user";
 import TextField from '@mui/material/TextField';
@@ -11,7 +11,7 @@ const Login = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | undefined>();
+    const [error, setError] = useState<string>("");
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -34,7 +34,8 @@ const Login = () => {
           navigate("/dashboard");
         }
       } catch (error) {
-        setError("Error");
+        const err = error as AxiosError;
+          setError(err.response?.data as string);
       } finally {
         setLoading(false);
       }
@@ -57,13 +58,14 @@ const Login = () => {
           {!fetchingUser &&
           <>
           <h1 className="form-title">Login</h1>
-            {error && error}
+            <div className="form-error">{error && error}</div>
             <form className="login-form" onSubmit={(e) => onSubmitForm(e)}> 
               <TextField
               required
               autoComplete="off"
               label="Email"
               variant="filled"
+              type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}/>
               <TextField
@@ -77,7 +79,7 @@ const Login = () => {
             </form>
             </>
             }
-            {loading && <p>Loading...</p>}
+            {loading && <p className="form-loading-text">Loading...</p>}
         </div>
       </div>
     )

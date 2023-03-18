@@ -57,20 +57,18 @@ app.post("/register", async (req, res) => {
 
     if ( !firstName || !lastName || !email || !password || !confirmPassword) {
       console.log("Missing fields");
-      res.status(403);
-      return res.send("Missing fields");
+      return res.status(403).send("Missing fields");
     };
 
     if (password !== confirmPassword) {
       console.log("Passwords do not match")
       res.status(403);
-      return res.send("Passwords do not match");
+      return res.status(403).send("Passwords do not match");
     }
 
     if (password.length < 6) {
       console.log("Password is too short");
-      res.status(403);
-      return res.send("Password is too short");
+      return res.status(403).send("Password is too short");
     }
 
     try {
@@ -94,13 +92,11 @@ app.post("/register", async (req, res) => {
       return res.json({ user: req.session.user });
   } catch (error) {
       console.error(error);
-      res.status(403);
 
       if (error == "ER_DUP_ENTRY") {
-        return res.send("User already exist")
+        return res.status(403).send("User already exist");
       }
-
-      return res.sendStatus(403);
+      return res.status(403)
   };
 });
 
@@ -109,7 +105,7 @@ app.post("/login", async (req, res) => {
 
   if (!email || !password) {
     console.log("Missing fields")
-    return res.sendStatus(403);
+    return res.status(403).send("Missing fields");
     }
 
   try {
@@ -117,8 +113,7 @@ app.post("/login", async (req, res) => {
 
     if (data.length === 0) {
       console.log("User was not found");
-      res.status(403);
-      return res.send("User was not found");
+      return res.status(403).send("User was not found");
     };
 
     const user = data[0];
@@ -126,8 +121,7 @@ app.post("/login", async (req, res) => {
 
     if (!matches) {
       console.log("Incorrect password");
-      res.status(403);
-      return res.send("Incorrect password");
+      return res.status(403).send("Incorrect password");
     };
 
     req.session.user = {
@@ -190,7 +184,6 @@ app.post("/search-resources", async (req, res) => {
     return res.json( data );
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 });
@@ -214,8 +207,7 @@ app.post("/submit-resource", async (req, res) => {
 
   if ( !url || !category || !submittedBy) {
     console.log("Missing fields");
-    res.status(403);
-    return res.send("Missing fields");
+    return res.status(403).send("Missing fields");
   };
 
   axios
@@ -233,8 +225,7 @@ app.post("/submit-resource", async (req, res) => {
   })
   .catch(error => {
     if (error.code === "ER_DUP_ENTRY") {
-      res.status(403);
-      return res.send("Resource link already exist")
+      return res.status(403).send("Resource link already exist");
     }
   });
 });
@@ -249,7 +240,6 @@ app.post("/fetch-pending", async (req, res) => {
     return res.json( data );
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 })
@@ -266,7 +256,6 @@ app.put("/update-status", async (req, res) => {
     return res.json( data );
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 })
@@ -283,7 +272,6 @@ app.delete("/delete-resource", async (req, res) => {
     return res.json( data );
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 })
@@ -297,7 +285,6 @@ app.get("/fetch-resource/:resourceId", async (req, res) => {
     return res.json( data );
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 })
@@ -310,7 +297,6 @@ app.get("/fetch-comments/:resourceId", async (req, res) => {
     return res.json( data );
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 })
@@ -327,7 +313,6 @@ app.post("/submit-comment", async (req, res) => {
     return res.sendStatus(200);
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 })
@@ -343,8 +328,7 @@ app.delete("/delete-comment/:commentId/:userId", async (req, res) => {
     const data = await db.deleteComment(commentId) as RowDataPacket;
     return res.json( data );
 } catch (error) {
-    console.error(error);
-    res.status(403);
+    console.error(error);   
     return res.sendStatus(403);
   };
 })

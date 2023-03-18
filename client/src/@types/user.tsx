@@ -1,5 +1,3 @@
-// @types.user.tsx
-
 export interface User {
   id: string,
   firstName: string,

@@ -77,7 +77,7 @@ const Header = () => {
         <div className={toggle ? "hide-menu" : "menu"}>
           <MenuIcon onClick={() => setToggle(prev => !prev)}/>
         </div>
-        <ul className={toggle ? "overlay-content" : "navbar-right-container"} style={{width: user.role === "Admin" ? "500px" : "350px"}}>
+        <ul className={toggle ? "overlay-content" : "navbar-right-container"} style={{width: user.role === "Admin" ? "500px" : "380px"}}>
           <li onClick={handleToggle} className="close-icon"><CloseIcon /></li>
           <li onClick={handleToggle}><Link to="/" onClick={refreshPage}>Home</Link></li>
           <li onClick={handleToggle}><Link to="/submittals">Submit a Resource</Link></li>

@@ -394,6 +394,15 @@ ul button:hover {
   margin: auto auto;
 }
 
+.form-error {
+  text-align: center;
+}
+
+.form-loading-text {
+  padding: 20px;
+  text-align: center;
+}
+
 /* Admin Panel Styling */
 .admin-header {
   font-size: 1rem;

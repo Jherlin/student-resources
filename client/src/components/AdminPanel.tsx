@@ -11,65 +11,58 @@ const AdminPanel = () => {
   const user = globalContext.user as User;
   const navigate = useNavigate();
   const [data, setData] = useState<Data[] | []>([]);
-  const [error, setError] = useState<string | undefined>();
 
-  const acceptRequest = (id: string) => {
-    axios
-    .put(`${process.env.REACT_APP_BASE_URL}/update-status`, {resourceId: id} , {
-        withCredentials: true,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-        },
-    })
-    .then((response) => {
-        if (response.status === 200) {
-          console.log(response.data);
-          setData(data.filter(item => item.id !== id));
-        }
-    })
-    .catch((error) => {
-      console.log(error.response.data);
-  })
+  const acceptRequest = async (id: string) => {
+    try {
+      const response = await axios.put(`${process.env.REACT_APP_BASE_URL}/update-status`, {resourceId: id} , {
+          withCredentials: true,
+          headers: {
+              "Access-Control-Allow-Origin": "*",
+          },
+      })
+      
+      if (response.status === 200) {
+        setData(data.filter(item => item.id !== id));
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  const declineRequest = (id: string) => {
-    axios
-    .delete(`${process.env.REACT_APP_BASE_URL}/delete-resource`,{
+  const declineRequest = async (id: string) => {
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/delete-resource`,{
         data: {resourceId: id},
         withCredentials: true,
         headers: {
             "Access-Control-Allow-Origin": "*",
         },
-    })
-    .then((response) => {
-        if (response.status === 200) {
-          console.log("Resource was deleted");
-          setData(data.filter(item => item.id !== id));
-        }
-    })
-    .catch((error) => {
+      })
+      
+      if (response.status === 200) {
+        setData(data.filter(item => item.id !== id));
+      };
+    } catch (error) {
       console.log(error);
-
-  })
+    }
   }
 
-  const getPendingRequests = () => {
-    axios
-        .post(`${process.env.REACT_APP_BASE_URL}/fetch-pending`, null, {
-            withCredentials: true,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-            },
-        })
-        .then((response) => {
-            if (response.status === 200) {
-                setData(response.data);
-            }
-        })
-        .catch((error) => {
-          setError(error.response.data);
-  
+  const getPendingRequests = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/fetch-pending`, null, {
+        withCredentials: true,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+        },
       })
+        
+      if (response.status === 200) {
+        setData(response.data);
+        };
+    } catch (error) {
+      console.log(error);
+    }
     };
 
   useEffect(() => {
@@ -93,7 +86,6 @@ const AdminPanel = () => {
           <h2>Resources Pending Approval:</h2> 
         </div>
         }
-        {error && error}
         {data && <PendingRequests data={data} acceptRequest={acceptRequest} declineRequest={declineRequest}/>}
       </div>
     </div>
