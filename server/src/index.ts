@@ -3,11 +3,12 @@ import express from "express";
 import * as session from "express-session";
 import expressMysqlSession from "express-mysql-session";
 import cors from "cors";
+import axios from "axios";
 import bcrypt from "bcrypt";
 import _ from "lodash";
+import Filter from "bad-words";
 import * as db from "./db";
 import { RowDataPacket } from "mysql2";
-import axios from "axios";
 
 // Declaraton merging
 declare module "express-session" {
@@ -303,13 +304,19 @@ app.get("/fetch-comments/:resourceId", async (req, res) => {
 
 app.post("/submit-comment", async (req, res) => {
   const { content, time, resourceId, userId } = req.body;
+  const filter = new Filter();
+
+  // const newBadWords = ['some', 'bad', 'word'];
+  // filter.addWords(...newBadWords);
+
+  const comment = filter.clean(content);
 
   if (!req.sessionID || !req.session.user?.id) {
     return res.sendStatus(403);
   }
   
   try {
-    const data = await db.insertComment(content, time, resourceId, userId) as RowDataPacket;
+    const data = await db.insertComment(comment, time, resourceId, userId) as RowDataPacket;
     return res.sendStatus(200);
 } catch (error) {
     console.error(error);
