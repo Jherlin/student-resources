@@ -1,8 +1,15 @@
 import { SearchResultsProps } from "../@types/data";
 import ChatIcon from '@mui/icons-material/Chat';
 import { Link } from "react-router-dom";
-
+import websiteIcon from "../assets/web.png";
+ 
 const SearchResults = ( { searchResults }: SearchResultsProps) => {
+
+  const handleError = ( currentTarget: EventTarget & HTMLImageElement ) => {
+    currentTarget.onerror = null
+    currentTarget.src = websiteIcon
+  };
+
   return (
     <>
       {searchResults && searchResults.map( item => {
@@ -18,7 +25,12 @@ const SearchResults = ( { searchResults }: SearchResultsProps) => {
               </span>
             </div>
             <div className="resource-img">
-              <a href={item.url} target="_blank" rel="noreferrer"><img src={item.image} alt={""}/></a>
+              <a href={item.url} target="_blank" rel="noreferrer">
+                <img 
+                src={item.image} 
+                alt={""} 
+                onError={({ currentTarget }) => handleError(currentTarget)}/>
+              </a>
             </div>
           </div>
         )
