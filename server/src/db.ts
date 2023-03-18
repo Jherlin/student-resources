@@ -127,7 +127,7 @@ export const getItemsByCategory = (category: string, offset: number) => {
 
 export const getResource = (resourceId: string) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT * FROM resource WHERE id = ?";
+    const sql = " SELECT resource.id, resource.title, resource.url, resource.description, resource.image, resource.category, person.first_name as firstName FROM resource INNER JOIN person ON resource.submitted_by=person.id WHERE resource.id=?";
     connection.query(sql, [resourceId], (error, result) => {
       if(error){
         console.log(error);

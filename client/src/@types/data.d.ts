@@ -7,6 +7,7 @@ export interface Data {
     category: string,
     submitted_by: string,
     approval_pending: number
+    firstName: string
 }
 
 export interface DataProps {

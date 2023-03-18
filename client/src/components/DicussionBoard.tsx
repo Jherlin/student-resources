@@ -20,7 +20,8 @@ const DiscussionBoard = () => {
     image: "",
     category: "",
     submitted_by: "",
-    approval_pending: 0
+    approval_pending: 0,
+    firstName: ""
   });
   const [comments, setComments] = useState<CommentData[]>([]);
   const [commentForm, setCommentForm] = useState({
@@ -153,7 +154,7 @@ return (
           <h2><a href={resource.url} target="_blank" rel="noreferrer">{resource.title}</a></h2>
           <a className="website-link" href={resource.url} target="_blank" rel="noreferrer">{resource.url}</a>
           <p>{resource.description && resource.description.slice(0, 141)}...</p>
-          <span>Category: {resource.category}</span>
+          <span>Category: {resource.category} · </span><span>Submitted By: {resource.firstName}</span>
         </div>
         <div className="resource-img">
           <a href={resource.url} target="_blank" rel="noreferrer"><img src={resource.image} alt={""}/></a>
