@@ -7,8 +7,8 @@ import GlobalContext from "../providers/GlobalContext"
 const Dashboard = () => {
   const { user } = useContext(GlobalContext) as UserContextType;
   const [ userStats, setUserStats] = useState<UserStats>({
-    count:"",
-    dateJoined:""
+    dateJoined:"",
+    count:""
   });
 
   const navigate = useNavigate();
@@ -24,10 +24,7 @@ const Dashboard = () => {
 
       if(response.status === 200) {
         console.log(response.data);
-        setUserStats({
-          count: response.data.count,
-          dateJoined: response.data.date_joined
-        })
+        setUserStats(response.data)
       };
     } catch (error) {
       console.log(error);
@@ -54,9 +51,9 @@ const Dashboard = () => {
               <>
                 <h1 className="dashboard-title">Welcome to your dashboard {user.firstName}</h1>
                 <div className="user-stats">
-                  <p>Email: {user.email}</p>
-                  <p>Contributions: {userStats.count}</p>
-                  <p>Date Joined: {new Date(userStats.dateJoined + "Z").toLocaleString("en-US", {
+                  <p><b>Email: </b>{user.email}</p>
+                  <p><b>Contributions: </b>{userStats.count}</p>
+                  <p><b>Date Joined: </b>{new Date(userStats.dateJoined + "Z").toLocaleString("en-US", {
                       localeMatcher: "best fit",
                       timeZoneName: "short"
                       } )}  </p>

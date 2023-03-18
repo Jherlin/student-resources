@@ -161,7 +161,7 @@ return (
       </div>
       <div className="comment-section">
         <form className="comment-form">
-        <p className="user-firstname">Comment as {user.firstName}</p>
+        {user.id && <p className="user-firstname">Comment as {user.firstName}</p>}
           <TextField
             className="comment-draft"
             id="outlined-multiline-static"

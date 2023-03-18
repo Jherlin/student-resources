@@ -187,7 +187,6 @@ app.post("/search-resources", async (req, res) => {
 
   try {
     const data = await db.getSearchItems(searchQuery, offset) as RowDataPacket;
-    console.log(data.length);
     return res.json( data );
 } catch (error) {
     console.error(error);

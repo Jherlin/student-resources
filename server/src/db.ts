@@ -180,13 +180,12 @@ export const deleteComment = (commentId: string) => {
 
 export const getUserStats = (id: string) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT person.date_joined, resource.count(*) as count FROM resource INNER JOIN person ON resource.submitted_by=person.id WHERE submitted_by=?"
+    const sql = "SELECT person.date_joined as dateJoined, COUNT(resource.id) as count FROM person LEFT JOIN resource ON person.id=resource.submitted_by WHERE person.id=?;"
     connection.query(sql, [id], (error, result) => {
       if(error){
         console.log(error);
         return reject(error);
       }
-        console.log(result)
         return resolve(result);
     });
   });

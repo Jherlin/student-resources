@@ -9,15 +9,15 @@ export const useAxios = (axiosParams: any, pagination: any) => {
   const controller = new AbortController();
 
   const updateBrowserUrl = () => {
-    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    if(!newUrl.includes("search")){
-      window.history.replaceState({path:newUrl},'', axiosParams.data.searchQuery ? `search/${axiosParams.data.searchQuery}` : "");
+    const currentUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    if(!currentUrl.includes("search")){
+      window.history.replaceState({path:currentUrl},"", axiosParams.data.searchQuery ? `search/${axiosParams.data.searchQuery}` : "");
     }
   }
 
   const fetchData = async (params: any, pagination: any) => {
     setLoading(true);
-    console.log("Searching database...")
+
     try {
       const response = await axios.request({...params, signal: controller.signal});
 
@@ -29,7 +29,6 @@ export const useAxios = (axiosParams: any, pagination: any) => {
         return [...prevState, ...response.data]})
       } else if(response.status === 200) {
         updateBrowserUrl();
-        console.log(response.data);
         setResponse(response.data);
       };
     } catch (error) {

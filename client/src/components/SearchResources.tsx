@@ -19,7 +19,7 @@ const SearchResources = () => {
     finalQuery: "",
     route: "/search-resources",
     category: ""
-  })
+  });
 
   const { response, loading } = useAxios({
     method: "POST",
@@ -41,7 +41,7 @@ const SearchResources = () => {
     numberOfPages = Math.ceil(searchResults.length  / 25)
   };
 
-  const getSearchResults = (event: FormEvent<HTMLFormElement>) => {
+  const getSearchResults = (event: FormEvent<HTMLFormElement>) => { 
     if(event){
       event.preventDefault();
     };
@@ -71,7 +71,6 @@ const SearchResources = () => {
   };
 
   const searchCategory = (category: string) => {
-    console.log("Searching by category");
     const offset = (numberOfPages - 1) * 25;
 
     setAxiosParams({
@@ -95,24 +94,20 @@ const SearchResources = () => {
   };
 
   const refreshPage = () => {
-    const homeUrl = window.location.protocol + "//" + window.location.host + "/";
+    const homeUrl = window.location.protocol + "//" + window.location.host;
     const pathName = window.location.pathname;
-
+    
+    // category btn will toggle a highlight of the categories section
     if (pathName === "/" ) {
-      console.log("hey")
       setToggle(prev => !prev);
       return;
-    }
-
-    if (pathName === "/register" || 
-      pathName === "/login" || 
-      pathName === "/dashboard" || 
-      pathName === "/submittals" || 
-      pathName === "/admin") {
-      return;
     };
-  
-    window.location.replace(homeUrl);
+
+    if (searchResults.length) {
+      setAxiosParams({...axiosParams, query: "", finalQuery: ""})
+      setSearchResults([])
+      window.history.replaceState({path:homeUrl},"", "/")
+    };
   };
 
   useEffect(() => {
@@ -127,7 +122,7 @@ const SearchResources = () => {
       setSearchResults(response);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [response]);
+  }, [response, searchParams]);
   
   return (
     <div className="main-content">
@@ -156,7 +151,7 @@ const SearchResources = () => {
             className="category-btn"
             variant="contained"
             onClick={refreshPage}
-            size="medium">Categories</Button>
+            size="medium">{searchResults.length ? "Back To Home" : "Categories"}</Button>
           </div>
         </form>
           {!searchResults.length &&

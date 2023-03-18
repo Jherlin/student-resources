@@ -15,34 +15,32 @@ const Header = () => {
     const user = globalContext.user as User;
     const matches = useMediaQuery('(max-width:767px)');
 
-    const logout = () => {
+    const logout = async () => {
         handleToggle();
-        axios
-            .post(`${process.env.REACT_APP_BASE_URL}/logout`, null, {
-                withCredentials: true,
-                headers: {
-                    "Access-Control-Allow-Origin": "*",
-                },
-            })
-            .then((response) => {
-                if (response.status === 200) {
-                    globalContext.setUser({
-                      id: "",
-                      firstName: "",
-                      lastName: "",
-                      email: "",
-                      password: "",
-                      role: ""
-                    });
-                    navigate("/");
-                } else {
-                    throw new Error()
-                }
-            })
-            .catch((error) => {
-                console.error(`Couldn"t log the user out: ${error}`)
-            })
-    }
+
+        try {
+          const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/logout`, null, {
+              withCredentials: true,
+              headers: {
+                  "Access-Control-Allow-Origin": "*",
+              },
+          })
+
+          if (response.status === 200) {
+            globalContext.setUser({
+              id: "",
+              firstName: "",
+              lastName: "",
+              email: "",
+              password: "",
+              role: ""
+            });
+            return navigate("/");
+          }
+        } catch (error) {
+          console.error(`Couldn"t log the user out: ${error}`)
+        }
+    };
 
     const refreshPage = () => {
       const homeUrl = window.location.protocol + "//" + window.location.host + "/";
@@ -63,12 +61,12 @@ const Header = () => {
       if(matches){
         setToggle(prev => !prev);
       }
-    }
+    };
 
     const handleLogin = () => {
       handleToggle();
-      navigate("/login")
-    }
+      return navigate("/login");
+    };
 
     return (
       <header>
@@ -79,7 +77,7 @@ const Header = () => {
         <div className={toggle ? "hide-menu" : "menu"}>
           <MenuIcon onClick={() => setToggle(prev => !prev)}/>
         </div>
-        <ul className={toggle ? "overlay-content" : "navbar-right-container"} style={{width: user.id && "460px"}}>
+        <ul className={toggle ? "overlay-content" : "navbar-right-container"} style={{width: user.role === "Admin" ? "500px" : "350px"}}>
           <li onClick={handleToggle} className="close-icon"><CloseIcon /></li>
           <li onClick={handleToggle}><Link to="/" onClick={refreshPage}>Home</Link></li>
           <li onClick={handleToggle}><Link to="/submittals">Submit a Resource</Link></li>
