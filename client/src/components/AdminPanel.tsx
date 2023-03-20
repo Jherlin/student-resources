@@ -5,6 +5,7 @@ import { Data } from "../@types/data";
 import { User, UserContextType } from "../@types/user";
 import GlobalContext from "../providers/GlobalContext";
 import PendingRequests from "./PendingRequests";
+import { url, axiosConfig } from "../axiosConfig";
 
 const AdminPanel = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
@@ -14,12 +15,7 @@ const AdminPanel = () => {
 
   const acceptRequest = async (id: string) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_BASE_URL}/update-status`, {resourceId: id} , {
-          withCredentials: true,
-          headers: {
-              "Access-Control-Allow-Origin": "*",
-          },
-      })
+      const response = await axios.put(`${url}/update-status`, {resourceId: id} , axiosConfig)
       
       if (response.status === 200) {
         setData(data.filter(item => item.id !== id));
@@ -32,13 +28,7 @@ const AdminPanel = () => {
 
   const declineRequest = async (id: string) => {
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/delete-resource`,{
-        data: {resourceId: id},
-        withCredentials: true,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-        },
-      })
+      const response = await axios.delete(`${url}/delete-resource/${id}`, axiosConfig)
       
       if (response.status === 200) {
         setData(data.filter(item => item.id !== id));
@@ -50,12 +40,7 @@ const AdminPanel = () => {
 
   const getPendingRequests = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/fetch-pending`, null, {
-        withCredentials: true,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-        },
-      })
+      const response = await axios.post(`${url}/fetch-pending`, null, axiosConfig)
         
       if (response.status === 200) {
         setData(response.data);

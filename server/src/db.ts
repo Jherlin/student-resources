@@ -88,7 +88,7 @@ export const updatePendingStatus = (resourceId: string) => {
 
 export const deleteResource = (resourceId: string) => {
   return new Promise((resolve, reject)=> {
-    const sql = "DELETE FROM resource WHERE id = ?";
+    const sql = "DELETE FROM resource WHERE id=?";
     connection.query(sql, [resourceId], (error, result) => {
       if(error){
         console.log(error);
@@ -101,7 +101,7 @@ export const deleteResource = (resourceId: string) => {
 
 export const getSearchItems = (searchQuery: string, offset: number) => {
   return new Promise((resolve, reject)=> {
-    const sql = "SELECT *, MATCH (title, url) AGAINST (?) as score FROM resource WHERE MATCH (title, url) AGAINST (?) > 0 AND approval_pending=0 ORDER BY score DESC LIMIT ?, 25";
+    const sql = "SELECT *, MATCH (title, url, category) AGAINST (?) as score FROM resource WHERE MATCH (title, url, category) AGAINST (?) > 0 AND approval_pending=0 ORDER BY score DESC LIMIT ?, 25";
     connection.query(sql, [searchQuery, searchQuery, offset], (error, result) => {
       if(error){
         console.log(error);

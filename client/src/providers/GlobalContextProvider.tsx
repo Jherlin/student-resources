@@ -1,7 +1,8 @@
-import React, { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import GlobalContext from "./GlobalContext";
 import axios from "axios";
 import { User } from "../@types/user";
+import { url, axiosConfig } from "../axiosConfig";
 
 interface Props {
   children?: ReactNode
@@ -25,14 +26,9 @@ const GlobalContextProvider = ({ children }: Props) => {
 
       const fetchUser = async () => {
         console.log("fetching user...")
-  
+    
         try {
-          const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fetch-user`, {
-                  withCredentials: true,
-                  headers: {
-                      'Access-Control-Allow-Origin': '*',
-                  },
-              })
+          const response = await axios.get(`${url}/fetch-user`, axiosConfig)
   
           if (response.status === 200) {
             setUser(response.data.user)

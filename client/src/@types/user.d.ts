@@ -8,9 +8,9 @@ export interface User {
 }
 
 export type UserContextType = {
-    user: User;
-    setUser: React.Dispatch<React.SetStateAction<User>>;
-    fetchingUser: boolean;
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+  fetchingUser: boolean;
 };
 
 export interface UserStats {

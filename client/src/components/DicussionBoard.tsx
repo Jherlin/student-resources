@@ -8,6 +8,7 @@ import { InputAdornment } from "@mui/material";
 import { User, UserContextType } from "../@types/user";
 import GlobalContext from "../providers/GlobalContext";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { url, axiosConfig } from "../axiosConfig";
 
 const DiscussionBoard = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
@@ -36,12 +37,7 @@ const DiscussionBoard = () => {
   
   const getResource = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fetch-resource/${resourceId}`,{
-        withCredentials: true,
-        headers: {
-        "Access-Control-Allow-Origin": "*",
-        }
-      })
+      const response = await axios.get(`${url}/fetch-resource/${resourceId}`, axiosConfig)
 
       if (response.status === 200) {
         setResource(response.data[0]);
@@ -56,12 +52,7 @@ const DiscussionBoard = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fetch-comments/${resourceId}`,{
-        withCredentials: true,
-        headers: {
-        "Access-Control-Allow-Origin": "*",
-        }
-      })
+      const response = await axios.get(`${url}/fetch-comments/${resourceId}`, axiosConfig)
 
       if(response.data && response.data.length === 0){
         console.log("There were no comments found in the database");
@@ -86,12 +77,7 @@ const DiscussionBoard = () => {
     };
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/submit-comment`, commentForm ,{
-        withCredentials: true,
-        headers: {
-        "Access-Control-Allow-Origin": "*",
-        }
-      })
+      const response = await axios.post(`${url}/submit-comment`, commentForm , axiosConfig)
 
       if(response.status === 200) {
         setCommentForm({
@@ -119,13 +105,10 @@ const DiscussionBoard = () => {
   };
 
   const handleClick = async (commentId: string, userId: string) => {
+    const userRole = user.role;
+    
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/delete-comment/${commentId}/${userId}` ,{
-        withCredentials: true,
-        headers: {
-        "Access-Control-Allow-Origin": "*",
-        }
-      })
+      const response = await axios.delete(`${url}/delete-comment/${commentId}/${userId}/${userRole}` , axiosConfig)
 
       if(response.status === 200) {
         setComments((prev) => prev.filter((item) => {
@@ -193,7 +176,7 @@ return (
                 timeZoneName: "short"
                 } )} </span>
               <div className="delete-btn">
-                {user.id === comment.user_id && <button onClick={() => handleClick(comment.id, comment.user_id)}>· Delete <DeleteIcon /></button>}
+                {(user.id === comment.user_id || user.role ==="Admin") && <button onClick={() => handleClick(comment.id, comment.user_id)}>· Delete <DeleteIcon /></button>}
               </div>
             </div>
           </div>

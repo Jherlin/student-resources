@@ -5,6 +5,7 @@ import GlobalContext from "../providers/GlobalContext"
 import { UserContextType } from "../@types/user";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { url, axiosConfig } from "../axiosConfig";
 
 const Register = () => {
     const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -28,12 +29,7 @@ const Register = () => {
         setLoading(true);
 
         try {
-          const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, formData, {
-            withCredentials: true,
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-            },
-          })
+          const response = await axios.post(`${url}/register`, formData, axiosConfig)
 
           if (response.status === 200) {
             setUser(response.data.user);

@@ -9,6 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormControl from "@mui/material/FormControl";
+import { url, axiosConfig } from "../axiosConfig";
 
 const Submittals = () => {
   const globalContext = useContext(GlobalContext) as UserContextType;
@@ -35,12 +36,7 @@ const Submittals = () => {
       });
 
     try {
-      await axios.post(`${process.env.REACT_APP_BASE_URL}/submit-resource`, formData, {
-        withCredentials: true,
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-        },
-      })
+      await axios.post(`${url}/submit-resource`, formData, axiosConfig)
     } catch (error) {
       const err = error as AxiosError;
       setError(err.response?.data as string);

@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { UserContextType, UserStats } from "../@types/user";
-import GlobalContext from "../providers/GlobalContext"
+import GlobalContext from "../providers/GlobalContext";
+import { url, axiosConfig } from "../axiosConfig";
 
 const Dashboard = () => {
   const { user } = useContext(GlobalContext) as UserContextType;
@@ -15,12 +16,7 @@ const Dashboard = () => {
   
   const getUserStats = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/fetch-userstats/${user.id}`,{
-        withCredentials: true,
-        headers: {
-        "Access-Control-Allow-Origin": "*",
-        }
-      })
+      const response = await axios.get(`${url}/fetch-userstats/${user.id}`, axiosConfig)
 
       if(response.status === 200) {
         setUserStats(response.data)

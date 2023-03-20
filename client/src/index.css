@@ -29,7 +29,7 @@ header {
 }
 
 .navbar-left-container svg {
-  font-size: 2.3rem;
+  font-size: 2.2rem;
 }
 
 .navbar-left-container a:link, 
@@ -67,11 +67,11 @@ ul button {
 }
 
 ul button:hover {
-  color: #1976D2;
+  color: inherit;
 }
 
 .menu svg {
-  font-size: 2rem;
+  font-size: 2.4rem;
 }
 
 .overlay {
@@ -108,7 +108,7 @@ ul button:hover {
 }
 
 .close-icon svg:hover {
-  color: #1976D2;
+  color: inherit;
 }
 
 .hide-search-icon {
@@ -124,14 +124,7 @@ ul button:hover {
 .overlay-content a:hover, 
 .overlay-content a:active {
   text-decoration: none;
-}
-
-.overlay-content a:visited {
   color: inherit;
-}
-
-.overlay-content a:hover {
-  color: #1976D2;
 }
 
 .main-content {
@@ -141,7 +134,7 @@ ul button:hover {
 
 .search-form {
   text-align: center;
-  margin-top: 160px;
+  margin-top: 35px;
 }
 
 .move-search-form {
@@ -151,7 +144,7 @@ ul button:hover {
 
 .search-results {
   opacity: 0;
-  margin-top: 30px;
+  margin-top: 15px;
 }
 
 .show-search-results {
@@ -176,18 +169,18 @@ ul button:hover {
 }
 
 .search-bar-btns {
-  margin-top: 10px;
+  margin: 10px 0px;
 }
 
 .search-bar-btns button{
   margin: 0px 10px;
-  font-size: 0.7rem;
+  font-size: .8rem;
 }
 
 .categories-container {
   display: flex;
   flex-wrap: wrap;
-  margin: 70px 12px;
+  margin: 60px 12px;
 }
 
 .hightlight-categories {
@@ -209,11 +202,7 @@ ul button:hover {
 }
 
 .category-card h2 {
-  font-size: 1.3rem;
-}
-
-.category-card:hover {
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+  font-size: 1rem;
 }
 
 .category-icon svg {
@@ -230,17 +219,8 @@ ul button:hover {
   margin-right: 10px;
 }
 
-.resource-img a {
-  display: flex;
-  align-items: center;
-}
-
-.resource-img img {
-  width: 120px;
-  height: 120px;
-  background-color: white;
-  cursor: pointer;
-  object-fit: contain;
+.resource-img {
+  display: none;
 }
 
 .card a:link, 
@@ -374,7 +354,7 @@ ul button:hover {
   display: flex;
   flex-direction: column;
   padding-top: 20px;
-  width: 400px;
+  width: 350px;
   margin: auto auto;
 }
 
@@ -382,7 +362,7 @@ ul button:hover {
   display: flex;
   flex-direction: column;
   padding-top: 20px;
-  width: 400px;
+  width: 350px;
   margin: auto auto;
 }
 
@@ -390,7 +370,7 @@ ul button:hover {
   display: flex;
   flex-direction: column;
   padding-top: 20px;
-  width: 400px;
+  width: 350px;
   margin: auto auto;
 }
 
@@ -418,6 +398,11 @@ ul button:hover {
   margin-top: 20px;
   font-size: 1rem;
   line-height: 1.4rem;
+}
+
+/* Not Found Page Styling */
+.not-found {
+  margin: 10px 12px;
 }
 
 @media screen and (min-width: 768px) {
@@ -451,7 +436,7 @@ ul button:hover {
   }
 
   .navbar-right-container a:visited {
-    color: inherit;
+    color: #000;
   }
 
   .navbar-right-container a:hover {
@@ -460,6 +445,10 @@ ul button:hover {
 
   .close-icon {
     display: none;
+  }
+
+  ul button:hover {
+    color: #1976D2;
   }
 
   .container {
@@ -471,12 +460,29 @@ ul button:hover {
     font-size: 2.9rem;
   }
 
+  .search-form {
+    margin-top: 160px;
+  }
+
+  .move-search-form {
+    margin-top: 10px;
+    transition: margin-top 0.9s;
+  }
+
+  .search-results {
+    margin-top: 20px;
+  }
+
   .search-bar {
     width: 500px;
   }
 
   .search-bar-btns button{
     font-size: 0.8rem;
+  }
+
+  .category-card h2 {
+    font-size: 1.3rem;
   }
 
   .website-link {
@@ -505,6 +511,10 @@ ul button:hover {
     font-size: 0.9rem;
   }
 
+  .category-card:hover {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+  }
+
   .comment-section {
     margin-top: -9px;
   }
@@ -515,6 +525,23 @@ ul button:hover {
   
   .comment-status {
     font-size: 1rem;
+  }
+
+  .resource-img {
+    display: inline-block;
+  }
+
+  .resource-img a {
+    display: flex;
+    align-items: center;
+  }
+  
+  .resource-img img {
+    width: 120px;
+    height: 120px;
+    background-color: white;
+    cursor: pointer;
+    object-fit: contain;
   }
 
   /* Dashboard Styling */

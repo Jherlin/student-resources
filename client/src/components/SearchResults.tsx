@@ -21,7 +21,7 @@ const SearchResults = ( { searchResults }: SearchResultsProps) => {
               <p>{item.description.slice(0, 141)}...</p>
               <span>Category: {item.category} · </span>
               <span className="dicussion-btn">
-                <Link to="/discussion" state={{ resourceId: item.id }}>Dicussion </Link><ChatIcon />
+                <Link to="/discussion" state={{ resourceId: item.id }}>Discussion </Link><ChatIcon />
               </span>
             </div>
             <div className="resource-img">

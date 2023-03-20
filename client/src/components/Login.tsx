@@ -5,6 +5,7 @@ import GlobalContext from "../providers/GlobalContext"
 import { UserContextType } from "../@types/user";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { url, axiosConfig } from "../axiosConfig";
 
 const Login = () => {
     const { user, fetchingUser, setUser } = useContext(GlobalContext) as UserContextType;
@@ -22,12 +23,7 @@ const Login = () => {
       setLoading(true)
 
       try {
-        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/login`, formData, {
-          withCredentials: true,
-          headers: {
-              "Access-Control-Allow-Origin": "*",
-          }
-        })
+        const response = await axios.post(`${url}/login`, formData, axiosConfig)
         
         if (response.status === 200) {
           setUser(response.data.user);

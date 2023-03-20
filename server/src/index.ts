@@ -9,6 +9,8 @@ import _ from "lodash";
 import Filter from "bad-words";
 import * as db from "./db";
 import { RowDataPacket } from "mysql2";
+import path from "path";
+import { OkPacket } from "mysql";
 
 // Declaraton merging
 declare module "express-session" {
@@ -18,18 +20,28 @@ declare module "express-session" {
 }
 
 // express and config
-dotenv.config();
 const app = express();
+app.set("trust proxy", 1);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../../client/build")));
+  app.use(cors({credentials: true}));
+} else {
+  dotenv.config();
+  app.use(
+    cors({
+        origin: "http://localhost:5000",
+        methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS", "HEAD"],
+        credentials: true,
+    })
+  )
+}
+
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
-      origin: "http://localhost:5000",
-      methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS", "HEAD"],
-      credentials: true,
-  })
-)
+app.use(express.json());
 
 // session store and session config
 const mysqlStore = expressMysqlSession(session);
@@ -41,18 +53,14 @@ app.use(session.default({
   store: sessionStore,
   secret: <string>process.env.SESSION_SECRET,
   cookie: {
-    secure: false,
-    httpOnly: false,
+    secure: (process.env.COOKIE_SECURE === "true"),
+    httpOnly: (process.env.COOKIE_HTTP === "true"),
     sameSite: false,
     maxAge: 1000 * 60 * 60 * 24
   }
 }))
 
 // express routes
-app.get("/", async (req, res) => {
-  return res.send("Welcome to Student Resources");
-});
-
 app.post("/register", async (req, res) => {
     const { firstName, lastName, email, password, confirmPassword, dateJoined, role } = req.body;
 
@@ -157,6 +165,7 @@ app.post("/logout", async (req, res) => {
 
 // User authentication for front end
 app.get("/fetch-user", async (req, res) => {
+  
   if (req.sessionID && req.session.user) {
     res.status(200);
     return res.json({ user: req.session.user });
@@ -261,15 +270,15 @@ app.put("/update-status", async (req, res) => {
   };
 })
 
-app.delete("/delete-resource", async (req, res) => {
-  const { resourceId } = req.body;
+app.delete("/delete-resource/:resourceId", async (req, res) => {
+  const { resourceId } = req.params;
 
   if (!req.sessionID || req.session.user?.role !== "Admin") {
     return res.sendStatus(403);
   }
 
   try {
-    const data = await db.deleteResource(resourceId) as RowDataPacket;
+    const data = await db.deleteResource(resourceId) as OkPacket;
     return res.json( data );
 } catch (error) {
     console.error(error);
@@ -306,7 +315,7 @@ app.post("/submit-comment", async (req, res) => {
   const { content, time, resourceId, userId } = req.body;
   const filter = new Filter();
 
-  // const newBadWords = ['some', 'bad', 'word'];
+  // const newBadWords = ["some", "bad", "word"];
   // filter.addWords(...newBadWords);
 
   const comment = filter.clean(content);
@@ -324,12 +333,14 @@ app.post("/submit-comment", async (req, res) => {
   };
 })
 
-app.delete("/delete-comment/:commentId/:userId", async (req, res) => {
-  const { commentId, userId } = req.params;
-
-  if (!req.sessionID || req.session.user?.id !== userId) {
-    return res.sendStatus(403);
-  }
+app.delete("/delete-comment/:commentId/:userId/:userRole", async (req, res) => {
+  const { commentId, userId, userRole } = req.params;
+  
+  if (userRole !== "Admin"){
+    if (!req.sessionID || req.session.user?.id !== userId) {
+      return res.sendStatus(403);
+    }
+  };
 
   try {
     const data = await db.deleteComment(commentId) as RowDataPacket;
@@ -340,7 +351,14 @@ app.delete("/delete-comment/:commentId/:userId", async (req, res) => {
   };
 })
 
-app.listen(3000, () => 
-  {console.log(`⚡Server is listening on 3000`)});
+if (process.env.NODE_ENV === "production") {
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../../client/build/index.html"))
+  }
+  )
+};
+
+app.listen(PORT, () => 
+  {console.log(`⚡Server is listening on ${PORT}`)});
 
 sessionStore.close();

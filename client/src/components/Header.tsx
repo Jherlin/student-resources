@@ -7,6 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { url, axiosConfig } from "../axiosConfig";
 
 const Header = () => {
     const [toggle, setToggle] = useState(false);
@@ -19,12 +20,7 @@ const Header = () => {
         handleToggle();
 
         try {
-          const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/logout`, null, {
-              withCredentials: true,
-              headers: {
-                  "Access-Control-Allow-Origin": "*",
-              },
-          })
+          const response = await axios.post(`${url}/logout`, null, axiosConfig)
 
           if (response.status === 200) {
             globalContext.setUser({
@@ -92,4 +88,4 @@ const Header = () => {
     )
 }
 
-export default Header
+export default Header;

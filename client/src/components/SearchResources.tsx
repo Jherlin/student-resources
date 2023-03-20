@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import { useAxios } from "../useAxios";
 import Categories from "./Categories";
 import { Data } from "../@types/data";
+import { url, axiosConfig } from "../axiosConfig";
 
 const SearchResources = () => {
   const params = useParams();
@@ -23,11 +24,7 @@ const SearchResources = () => {
 
   const { response, loading } = useAxios({
     method: "POST",
-    url: `${process.env.REACT_APP_BASE_URL}${axiosParams.route}`,
-    withCredentials: true,
-    headers: {
-        "Access-Control-Allow-Origin": "*",
-    },
+    url: `${url}${axiosParams.route}`, axiosConfig,
     data: {
       searchQuery : axiosParams.finalQuery, 
       offset: axiosParams.skipPages
@@ -76,6 +73,7 @@ const SearchResources = () => {
     setAxiosParams({
       ...axiosParams, 
       route: "/search-category",
+      query: "",
       finalQuery: category,
       skipPages: offset, 
       loadMore: false});
