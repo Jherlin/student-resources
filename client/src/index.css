@@ -290,16 +290,23 @@ ul button:hover {
   width: 100%;
 }
 
+.comment-form textarea, 
+textarea::placeholder {
+  font-size: 0.9rem;
+}
+
 .comment-draft svg:hover {
   color:#1976D2;
 }
 
 .comment-card {
   margin: 10px 12px;
+  font-size: 0.9rem;
+  color:#4D5156;
 }
 
 .comment-datetime {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
 }
 
 .user-firstname {
@@ -325,7 +332,7 @@ ul button:hover {
   background-color: transparent;
   border-width: 0;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-style: inherit;
   font-weight: inherit;
   line-height: inherit;
@@ -334,7 +341,8 @@ ul button:hover {
 }
 
 .delete-btn svg {
-  font-size: 1rem;
+  margin-top: 1px;
+  font-size: 0.8rem;
 }
 
 .loading-text {
@@ -525,6 +533,27 @@ ul button:hover {
   
   .comment-status {
     font-size: 1rem;
+  }
+
+  .comment-form textarea, 
+  textarea::placeholder {
+    font-size: inherit;
+  }
+
+  .comment-card {
+    font-size: inherit;
+  }
+
+  .comment-datetime {
+    font-size: 0.85rem;
+  }
+
+  .delete-btn button {
+    font-size: 0.9rem;
+  }
+  
+  .delete-btn svg {
+    font-size: 0.9rem;
   }
 
   .resource-img {
