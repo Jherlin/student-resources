@@ -98,6 +98,7 @@ const SearchResources = () => {
     // category btn will toggle a highlight of the categories section
     if (pathName === "/" ) {
       setToggle(prev => !prev);
+      setTimeout(() => {setToggle(false);}, 1000);
       return;
     };
 

@@ -8,11 +8,9 @@ export const useAxios = (axiosParams: any, pagination: any) => {
   const controller = new AbortController();
 
   const updateBrowserUrl = () => {
-    const currentUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-    if(!currentUrl.includes("search")){
-      window.history.replaceState({path:currentUrl},"", axiosParams.data.searchQuery ? `search/${axiosParams.data.searchQuery}` : "");
-    }
-  }
+    const currentUrl = window.location.protocol + "//" + window.location.host;
+    window.history.replaceState({path:currentUrl},"", axiosParams.data.searchQuery ? `/search/${axiosParams.data.searchQuery}` : "");
+  };
 
   const fetchData = async (params: any, pagination: any) => {
     setLoading(true);

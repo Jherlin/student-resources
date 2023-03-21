@@ -2,7 +2,7 @@
   "name": "student-resources",
   "version": "1.0.0",
   "description": "",
-  "main": "server/dist/index.js",
+  "main": "index.js",
   "scripts": {
     "start": "node server/dist/index.js",
     "start:build": "tsc -p . -w",
