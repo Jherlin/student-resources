@@ -20,6 +20,7 @@ declare module "express-session" {
 }
 
 // express and config
+dotenv.config();
 const app = express();
 app.set("trust proxy", 1);
 
@@ -27,7 +28,6 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../../client/build")));
   app.use(cors({credentials: true}));
 } else {
-  dotenv.config();
   app.use(
     cors({
         origin: "http://localhost:5000",

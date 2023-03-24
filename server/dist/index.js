@@ -47,6 +47,7 @@ const bad_words_1 = __importDefault(require("bad-words"));
 const db = __importStar(require("./db"));
 const path_1 = __importDefault(require("path"));
 // express and config
+dotenv.config();
 const app = (0, express_1.default)();
 app.set("trust proxy", 1);
 if (process.env.NODE_ENV === "production") {
@@ -54,7 +55,6 @@ if (process.env.NODE_ENV === "production") {
     app.use((0, cors_1.default)({ credentials: true }));
 }
 else {
-    dotenv.config();
     app.use((0, cors_1.default)({
         origin: "http://localhost:5000",
         methods: ["POST", "PUT", "GET", "DELETE", "OPTIONS", "HEAD"],
