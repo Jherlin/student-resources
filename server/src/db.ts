@@ -25,7 +25,6 @@ export const getUserById = (id: string) => {
     const sql = "SELECT * FROM person WHERE id = ?";
     connection.query(sql, [id], (error, user) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(user);
@@ -52,7 +51,8 @@ export const insertRersource = (title: string, url: string, description: string,
 
     connection.query(sql,[userId, title, url, description, image, category, submittedBy, approvalPending], (error, result) => {
       if(error){
-        return reject(error);
+        console.log(error);
+        return reject(error.code);
       }
         return resolve(result);
     });
@@ -65,7 +65,6 @@ export const getPendingSubmittals = () => {
     
     connection.query(sql, (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -78,7 +77,6 @@ export const updatePendingStatus = (resourceId: string) => {
     const sql = "UPDATE resource SET approval_pending = 0 WHERE id = ? AND approval_pending = 1";
     connection.query(sql, [resourceId], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -91,7 +89,6 @@ export const deleteResource = (resourceId: string) => {
     const sql = "DELETE FROM resource WHERE id=?";
     connection.query(sql, [resourceId], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -104,7 +101,6 @@ export const getSearchItems = (searchQuery: string, offset: number) => {
     const sql = "SELECT *, MATCH (title, url, category) AGAINST (?) as score FROM resource WHERE MATCH (title, url, category) AGAINST (?) > 0 AND approval_pending=0 ORDER BY score DESC LIMIT ?, 25";
     connection.query(sql, [searchQuery, searchQuery, offset], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -117,7 +113,6 @@ export const getItemsByCategory = (category: string, offset: number) => {
     const sql = "SELECT * FROM resource WHERE category=? AND approval_pending=0 LIMIT ?, 25";
     connection.query(sql, [category, offset], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -130,7 +125,6 @@ export const getResource = (resourceId: string) => {
     const sql = " SELECT resource.id, resource.title, resource.url, resource.description, resource.image, resource.category, person.first_name as firstName FROM resource INNER JOIN person ON resource.submitted_by=person.id WHERE resource.id=?";
     connection.query(sql, [resourceId], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -143,7 +137,6 @@ export const getComments = (resourceId: string) => {
     const sql = "SELECT comment.id, comment.content, comment.time, comment.user_id, person.first_name FROM comment INNER JOIN person ON comment.user_id=person.id WHERE resource_id=? ORDER BY time DESC";
     connection.query(sql, [resourceId,], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -170,7 +163,6 @@ export const deleteComment = (commentId: string) => {
     const sql = "DELETE FROM comment WHERE id=?";
     connection.query(sql, [commentId], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);
@@ -183,7 +175,6 @@ export const getUserStats = (id: string) => {
     const sql = "SELECT person.date_joined as dateJoined, COUNT(resource.id) as count FROM person LEFT JOIN resource ON person.id=resource.submitted_by WHERE person.id=?;"
     connection.query(sql, [id], (error, result) => {
       if(error){
-        console.log(error);
         return reject(error);
       }
         return resolve(result);

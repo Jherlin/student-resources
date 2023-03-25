@@ -71,7 +71,6 @@ app.post("/register", async (req, res) => {
 
     if (password !== confirmPassword) {
       console.log("Passwords do not match")
-      res.status(403);
       return res.status(403).send("Passwords do not match");
     }
 
@@ -206,7 +205,6 @@ app.post("/search-category", async (req, res) => {
     return res.json(data);
 } catch (error) {
     console.error(error);
-    res.status(403);
     return res.sendStatus(403);
   };
 });
@@ -220,24 +218,24 @@ app.post("/submit-resource", async (req, res) => {
     return res.status(403).send("Missing fields");
   };
 
-  axios
-  .get(`http://api.linkpreview.net/?key=${process.env.API_KEY}&q=${url}`)
-  .then(response => {
-    if(response.status === 200) {
+  try {
+    const response = await axios.get(`http://api.linkpreview.net/?key=${process.env.API_KEY}&q=${url}`);
+
+    if (response.status === 200){
       const { title, description, image, url } = response.data;
-      return db.insertRersource(title, url, description, image, category, submittedBy, approvalPending) as RowDataPacket;
+      const result = await db.insertRersource(title, url, description, image, category, submittedBy, approvalPending);
+
+      if (result){
+        return res.send("Succesfully submitted a resource")
+      }
     }
-  })
-  .then(response => {
-    if(response){
-      return res.send("Succesfully submitted a resource")
-    }
-  })
-  .catch(error => {
-    if (error.code === "ER_DUP_ENTRY") {
+  } catch (error) {
+    console.log(error);
+
+    if (error == "ER_DUP_ENTRY") {
       return res.status(403).send("Resource link already exist");
     }
-  });
+  };
 });
 
 app.post("/fetch-pending", async (req, res) => {

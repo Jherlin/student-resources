@@ -51,7 +51,6 @@ const getUserById = (id) => {
         const sql = "SELECT * FROM person WHERE id = ?";
         exports.connection.query(sql, [id], (error, user) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(user);
@@ -77,7 +76,8 @@ const insertRersource = (title, url, description, image, category, submittedBy, 
         const sql = "INSERT INTO resource (id, title, url, description, image, category, submitted_by, approval_pending) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         exports.connection.query(sql, [userId, title, url, description, image, category, submittedBy, approvalPending], (error, result) => {
             if (error) {
-                return reject(error);
+                console.log(error);
+                return reject(error.code);
             }
             return resolve(result);
         });
@@ -89,7 +89,6 @@ const getPendingSubmittals = () => {
         const sql = "SELECT * FROM resource WHERE approval_pending = 1";
         exports.connection.query(sql, (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -102,7 +101,6 @@ const updatePendingStatus = (resourceId) => {
         const sql = "UPDATE resource SET approval_pending = 0 WHERE id = ? AND approval_pending = 1";
         exports.connection.query(sql, [resourceId], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -115,7 +113,6 @@ const deleteResource = (resourceId) => {
         const sql = "DELETE FROM resource WHERE id=?";
         exports.connection.query(sql, [resourceId], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -128,7 +125,6 @@ const getSearchItems = (searchQuery, offset) => {
         const sql = "SELECT *, MATCH (title, url, category) AGAINST (?) as score FROM resource WHERE MATCH (title, url, category) AGAINST (?) > 0 AND approval_pending=0 ORDER BY score DESC LIMIT ?, 25";
         exports.connection.query(sql, [searchQuery, searchQuery, offset], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -141,7 +137,6 @@ const getItemsByCategory = (category, offset) => {
         const sql = "SELECT * FROM resource WHERE category=? AND approval_pending=0 LIMIT ?, 25";
         exports.connection.query(sql, [category, offset], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -154,7 +149,6 @@ const getResource = (resourceId) => {
         const sql = " SELECT resource.id, resource.title, resource.url, resource.description, resource.image, resource.category, person.first_name as firstName FROM resource INNER JOIN person ON resource.submitted_by=person.id WHERE resource.id=?";
         exports.connection.query(sql, [resourceId], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -167,7 +161,6 @@ const getComments = (resourceId) => {
         const sql = "SELECT comment.id, comment.content, comment.time, comment.user_id, person.first_name FROM comment INNER JOIN person ON comment.user_id=person.id WHERE resource_id=? ORDER BY time DESC";
         exports.connection.query(sql, [resourceId,], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -193,7 +186,6 @@ const deleteComment = (commentId) => {
         const sql = "DELETE FROM comment WHERE id=?";
         exports.connection.query(sql, [commentId], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);
@@ -206,7 +198,6 @@ const getUserStats = (id) => {
         const sql = "SELECT person.date_joined as dateJoined, COUNT(resource.id) as count FROM person LEFT JOIN resource ON person.id=resource.submitted_by WHERE person.id=?;";
         exports.connection.query(sql, [id], (error, result) => {
             if (error) {
-                console.log(error);
                 return reject(error);
             }
             return resolve(result);

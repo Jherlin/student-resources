@@ -22,7 +22,7 @@ const Submittals = () => {
     submittedBy: user.id,
     approvalPending: true
     });
-  const [error, setError] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
   const onSubmitForm = async (e: FormEvent<HTMLFormElement> | FormEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -36,10 +36,15 @@ const Submittals = () => {
       });
 
     try {
-      await axios.post(`${url}/submit-resource`, formData, axiosConfig)
+      const response = await axios.post(`${url}/submit-resource`, formData, axiosConfig);
+
+      if (response.status === 200) {
+        setMessage(response.data)
+      };
+      
     } catch (error) {
       const err = error as AxiosError;
-      setError(err.response?.data as string);
+      setMessage(err.response?.data as string);
       }
     };
 
@@ -58,7 +63,7 @@ const Submittals = () => {
       <div className="container">
         <div className="page-submittal">
             <h1 className="form-title">Submit a Resource</h1>
-            <div className="form-error">{error && error}</div>
+            <div className="form-error">{message && message}</div>
             <form className="resource-form"onSubmit={e => onSubmitForm(e)}>
               <TextField
                 required
