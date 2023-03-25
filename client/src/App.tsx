@@ -24,8 +24,11 @@ function App() {
             <Route path="/login" element={<Login />}/> 
             <Route path="/dashboard" element={<Dashboard />}/> 
             <Route path="/submittals" element={<Submittals />}/> 
-            <Route path="/admin" element={<AdminPanel />}/> 
-            <Route path="/discussion" element={<DiscussionBoard />}/> 
+            <Route path="/admin" element={<AdminPanel />}/>
+            <Route path="/discussion"> 
+              <Route index element={<DiscussionBoard />}/> 
+              <Route path="/discussion/:resourceId" element={<DiscussionBoard />}/>
+            </Route> 
             <Route path="*" element={<NotFound />}/> 
           </Routes>
         </GlobalContextProvider>

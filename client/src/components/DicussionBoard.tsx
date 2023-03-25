@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { Data, CommentData } from "../@types/data";
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import { InputAdornment } from "@mui/material";
@@ -11,6 +11,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { url, axiosConfig } from "../axiosConfig";
 
 const DiscussionBoard = () => {
+  const params = useParams();
+  const paramsResourceId = params.resourceId;
   const globalContext = useContext(GlobalContext) as UserContextType;
   const user = globalContext.user as User;
   const [resource, setResource] = useState<Data>({
@@ -33,14 +35,21 @@ const DiscussionBoard = () => {
   });
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const { resourceId } = location.state;
-  
-  const getResource = async () => {
+  const resourceId = location.state?.resourceId;
+  const navigate = useNavigate();
+
+  const updateBrowserUrl = (resourceId: string) => {
+    const currentUrl = window.location.protocol + "//" + window.location.host;
+    window.history.replaceState({path:currentUrl},"", `/discussion/${resourceId}`);
+  };
+
+  const getResource = async (resourceId: string) => {
     try {
       const response = await axios.get(`${url}/fetch-resource/${resourceId}`, axiosConfig)
 
       if (response.status === 200) {
         setResource(response.data[0]);
+        updateBrowserUrl(resourceId);
         getComments();
       }
     } catch (error) {
@@ -120,14 +129,30 @@ const DiscussionBoard = () => {
     };
   };
 
+  const deleteResource = async (id: string) => {
+    try {
+        await axios.delete(`${url}/delete-resource/${id}`, axiosConfig)
+    } catch (error) {
+      console.log(error);
+    } finally {
+        return navigate("/")
+    }
+  };
+
   useEffect(() => {
-    getResource();
+    let finalQuery = resourceId;
+
+    if (paramsResourceId) {
+        finalQuery = paramsResourceId;
+    };
+
+    getResource(finalQuery);
 
     if(resource) {
       setResource(resource);
     }
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+}, [resourceId, paramsResourceId]);
 
 return (
   <div className="main-content">
@@ -138,6 +163,7 @@ return (
           <a className="website-link" href={resource.url} target="_blank" rel="noreferrer">{resource.url}</a>
           <p>{resource.description && resource.description.slice(0, 141)}...</p>
           <span>Category: {resource.category} · </span><span>Submitted By: {resource.firstName}</span>
+          {user.role === "Admin" && <><span> · </span><button onClick={() => deleteResource(resource.id)}>Delete</button></>}
         </div>
         <div className="resource-img">
           <a href={resource.url} target="_blank" rel="noreferrer"><img src={resource.image} alt={""}/></a>

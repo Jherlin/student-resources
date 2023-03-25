@@ -230,7 +230,7 @@ app.post("/submit-resource", (req, res) => __awaiter(void 0, void 0, void 0, fun
         .then(response => {
         if (response.status === 200) {
             const { title, description, image, url } = response.data;
-            return db.insertRersource(title, lodash_1.default.toLower(url), description, image, category, submittedBy, approvalPending);
+            return db.insertRersource(title, url, description, image, category, submittedBy, approvalPending);
         }
     })
         .then(response => {
