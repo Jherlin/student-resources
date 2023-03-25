@@ -178,7 +178,7 @@ app.get("/fetch-userstats/:userId", async (req, res) => {
 
   try {
     const data = await db.getUserStats(userId) as RowDataPacket;
-    return res.json( data[0] );
+    return res.json(data[0]);
   } catch (error) {
       console.log(error);
       return res.sendStatus(403);
@@ -191,7 +191,7 @@ app.post("/search-resources", async (req, res) => {
 
   try {
     const data = await db.getSearchItems(searchQuery, offset) as RowDataPacket;
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);
     return res.sendStatus(403);
@@ -203,7 +203,7 @@ app.post("/search-category", async (req, res) => {
 
   try {
     const data = await db.getItemsByCategory(searchQuery, offset) as RowDataPacket;
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);
     res.status(403);
@@ -225,7 +225,7 @@ app.post("/submit-resource", async (req, res) => {
   .then(response => {
     if(response.status === 200) {
       const { title, description, image, url } = response.data;
-      return db.insertRersource(title, _.toLower(url), description, image, category, submittedBy, approvalPending) as RowDataPacket;
+      return db.insertRersource(title, url, description, image, category, submittedBy, approvalPending) as RowDataPacket;
     }
   })
   .then(response => {
@@ -247,7 +247,7 @@ app.post("/fetch-pending", async (req, res) => {
 
   try {
     const data = await db.getPendingSubmittals();
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);
     return res.sendStatus(403);
@@ -263,7 +263,7 @@ app.put("/update-status", async (req, res) => {
 
   try {
     const data = await db.updatePendingStatus(resourceId) as RowDataPacket;
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);
     return res.sendStatus(403);
@@ -279,7 +279,7 @@ app.delete("/delete-resource/:resourceId", async (req, res) => {
 
   try {
     const data = await db.deleteResource(resourceId) as OkPacket;
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);
     return res.sendStatus(403);
@@ -292,7 +292,7 @@ app.get("/fetch-resource/:resourceId", async (req, res) => {
 
   try {
     const data = await db.getResource(resourceId) as RowDataPacket;
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);
     return res.sendStatus(403);
@@ -304,7 +304,7 @@ app.get("/fetch-comments/:resourceId", async (req, res) => {
 
   try {
     const data = await db.getComments(resourceId) as RowDataPacket;
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);
     return res.sendStatus(403);
@@ -344,7 +344,7 @@ app.delete("/delete-comment/:commentId/:userId/:userRole", async (req, res) => {
 
   try {
     const data = await db.deleteComment(commentId) as RowDataPacket;
-    return res.json( data );
+    return res.json(data);
 } catch (error) {
     console.error(error);   
     return res.sendStatus(403);
