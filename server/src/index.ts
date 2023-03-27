@@ -56,7 +56,7 @@ app.use(session.default({
     secure: (process.env.COOKIE_SECURE === "true"),
     httpOnly: (process.env.COOKIE_HTTP === "true"),
     sameSite: false,
-    maxAge: 1000 * 60 * 60 * 24
+    maxAge: 1000 * 60 * 60 * 24 * 30
   }
 }))
 
