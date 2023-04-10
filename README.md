@@ -3,7 +3,7 @@
 ## This is a fully functional web app where students can search or submit CS related resources
 Live Website --> https://student-resources.herokuapp.com/
 
-This project began because I needed a place to store all the CS resources I was using in order to build fullstack applications or study for technical interviews. I found myself with more than 100 tabs packed into folders on my browser. Whenever I went back to develop an application with a different language, it was difficult to pinpoint the resources I had used before. I also wanted a way to provide all the resources needed to get started with programming for people who were new to coding.
+This project began because I needed a place to store all the CS resources I was using to build fullstack applications and study for technical interviews. I found myself with more than 100 tabs packed into folders on my browser. Whenever I went back to develop an application with a different language, it was difficult to pinpoint the resources I had used before. I also wanted a way to provide all the resources needed to get started with programming for people who were new to coding.
 
 ## Functionality
 * Developed an Express REST API to handle requests and search queries such as searching through a resource table index, ranking results by relevance, and limiting to 25 results per request.
