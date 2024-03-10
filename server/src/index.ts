@@ -223,15 +223,11 @@ app.post("/submit-resource", async (req, res) => {
 
     if (response.status === 200){
       const { title, description, image, url } = response.data;
-<<<<<<< HEAD
       const result = await db.insertRersource(title, url, description, image, category, submittedBy, approvalPending);
 
       if (result){
         return res.send("Succesfully submitted a resource")
       }
-=======
-      return db.insertRersource(title, url, description, image, category, submittedBy, approvalPending) as RowDataPacket;
->>>>>>> d64e2159fab54589774330daf05813bb48e266b1
     }
   } catch (error) {
     console.log(error);
