@@ -227,10 +227,14 @@ app.post("/submit-resource", (req, res) => __awaiter(void 0, void 0, void 0, fun
         const response = yield axios_1.default.get(`http://api.linkpreview.net/?key=${process.env.API_KEY}&q=${url}`);
         if (response.status === 200) {
             const { title, description, image, url } = response.data;
+<<<<<<< HEAD
             const result = yield db.insertRersource(title, url, description, image, category, submittedBy, approvalPending);
             if (result) {
                 return res.send("Succesfully submitted a resource");
             }
+=======
+            return db.insertRersource(title, url, description, image, category, submittedBy, approvalPending);
+>>>>>>> d64e2159fab54589774330daf05813bb48e266b1
         }
     }
     catch (error) {
