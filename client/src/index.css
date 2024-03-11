@@ -160,8 +160,9 @@ ul button:hover {
 
 .homepage-title {
   padding: 10px 0px;
+  margin-top: 90px;
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 1.85rem;
   text-align: center;
 }
 
@@ -175,17 +176,13 @@ ul button:hover {
 
 .search-bar-btns button{
   margin: 0px 10px;
-  font-size: .8rem;
+  font-size: .68rem;
 }
 
 .categories-container {
   display: flex;
   flex-wrap: wrap;
-  margin: 60px 12px;
-}
-
-.hightlight-categories {
-  border:0.13rem solid #1976D2;
+  margin: 30px 12px;
 }
 
 .category-card {
@@ -462,7 +459,7 @@ textarea::placeholder {
   }
 
   .homepage-title {
-    font-size: 2.9rem;
+    font-size: 2.1rem;
   }
 
   .search-form {
@@ -483,11 +480,17 @@ textarea::placeholder {
   }
 
   .search-bar-btns button{
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px 12px;
   }
 
   .category-card h2 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
 
   .website-link {
@@ -496,7 +499,7 @@ textarea::placeholder {
   }
 
   .card h2 {
-    font-size: 1.3rem;
+    font-size: 1rem;
   }
 
   .card h2 a:link, 
@@ -506,7 +509,7 @@ textarea::placeholder {
   }
 
   .card p {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .card span {

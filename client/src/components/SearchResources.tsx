@@ -11,7 +11,6 @@ import { url, axiosConfig } from "../axiosConfig";
 const SearchResources = () => {
   const params = useParams();
   const searchParams = params.searchQuery;
-  const [toggle, setToggle] = useState(false);
   const [searchResults, setSearchResults] = useState<Data[] | []>([]);
   const [axiosParams, setAxiosParams] = useState({
     skipPages: 0,
@@ -93,14 +92,6 @@ const SearchResources = () => {
 
   const refreshPage = () => {
     const homeUrl = window.location.protocol + "//" + window.location.host;
-    const pathName = window.location.pathname;
-    
-    // category btn will toggle a highlight of the categories section
-    if (pathName === "/" ) {
-      setToggle(prev => !prev);
-      setTimeout(() => {setToggle(false);}, 1000);
-      return;
-    };
 
     if (searchResults.length) {
       setAxiosParams({...axiosParams, query: "", finalQuery: ""})
@@ -147,14 +138,15 @@ const SearchResources = () => {
             variant="contained" 
             size="medium">Search</Button>
             <Button 
-            className="category-btn"
+            className="home-btn"
             variant="contained"
             onClick={refreshPage}
-            size="medium">{searchResults.length ? "Back To Home" : "Categories"}</Button>
+            sx={{display: searchResults.length ? "inline" : "none"}}
+            size="medium">{"Back To Home"}</Button>
           </div>
         </form>
           {!searchResults.length &&
-          <div className={toggle ? "categories-container hightlight-categories" : "categories-container"}>
+          <div className={"categories-container"}>
             <Categories searchCategory={searchCategory} axiosParams={axiosParams} setAxiosParams={setAxiosParams}/>
           </div>}
           <div className={!searchResults.length || (loading && !axiosParams.skipPages) ? "search-results" : "search-results show-search-results"}>
