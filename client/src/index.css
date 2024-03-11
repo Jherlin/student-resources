@@ -434,8 +434,6 @@ textarea::placeholder {
     align-items: center;
     list-style-type: none;
     white-space: nowrap;
-    font-size: 1.06rem;
-    width: 340px;
   }
 
   .navbar-right-container a:link, 
