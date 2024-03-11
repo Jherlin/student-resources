@@ -153,7 +153,7 @@ const SearchResources = () => {
             <SearchResults searchResults={searchResults} />
           </div>
           <div className="loadingSection">
-            {loading && <><span>Loading...</span><br/><br/></>}
+            {/* {loading && <><span>Loading...</span><br/><br/></>} */}
             {searchResults.length >= 25 && <Button variant="contained" size="small" onClick={() => loadMoreResults()}>Load more</Button>}
           </div>
       </div>

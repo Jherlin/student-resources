@@ -139,8 +139,8 @@ ul button:hover {
 }
 
 .move-search-form {
-  margin-top: 10px;
-  transition: margin-top 0.9s;
+  transform: translate(0px, -100px);
+  transition: transform 1s;
 }
 
 .search-results {
@@ -150,7 +150,9 @@ ul button:hover {
 
 .show-search-results {
   opacity: 1;
-  transition: opacity 0.9s;
+  transform: translate(0px, -100px);
+  transition-property: opacity, transform;
+  transition-duration: 1s; 
 }
 
 .container {
@@ -291,7 +293,7 @@ ul button:hover {
 
 .comment-form textarea, 
 textarea::placeholder {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .comment-draft svg:hover {
@@ -300,7 +302,7 @@ textarea::placeholder {
 
 .comment-card {
   margin: 10px 12px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color:#4D5156;
 }
 
@@ -310,13 +312,14 @@ textarea::placeholder {
 
 .user-firstname {
   color:#4D5156;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
 }
 
 .comment-status {
-  margin: 10px 12px;
+  margin: 5px 12px;
   color:#4D5156;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .delete-btn {
@@ -353,7 +356,7 @@ textarea::placeholder {
 .form-title {
   padding: 20px 0px;
   font-weight: 400;
-  font-size: 2.5rem;
+  font-size: 1.9rem;
   text-align: center;
 }
 
@@ -392,13 +395,25 @@ textarea::placeholder {
 
 /* Admin Panel Styling */
 .admin-header {
-  font-size: 1rem;
-  margin: 0px 12px;
-} 
+  margin: 10px 12px;
+}
+
+.admin-header h1{
+  font-size: 1.6rem;
+}
+
+.admin-header h2{
+  padding-top: 10px;
+  font-size: 1.2rem;
+}
 
 /* Dashboard Styling */
 .dashboard-card {
   margin: 10px 12px;
+}
+
+.dashboard-title {
+  font-size: 1.6rem;
 }
 
 .user-stats {
@@ -467,12 +482,15 @@ textarea::placeholder {
   }
 
   .move-search-form {
-    margin-top: 10px;
-    transition: margin-top 0.9s;
+    transform: translate(0px, -160px);
+    transition: transform 1s;
   }
 
-  .search-results {
-    margin-top: 20px;
+  .show-search-results {
+    opacity: 1;
+    transform: translate(0px, -160px);
+    transition-property: opacity, transform;
+    transition-duration: 1s; 
   }
 
   .search-bar {
@@ -529,20 +547,13 @@ textarea::placeholder {
   }
 
   .comment-section {
-    margin-top: -9px;
-  }
-
-  .user-firstname {
-    font-size: 1rem;
-  }
-  
-  .comment-status {
-    font-size: 1rem;
+    margin-top: 10px;
+    font-size: 0.9rem;
   }
 
   .comment-form textarea, 
   textarea::placeholder {
-    font-size: inherit;
+    font-size: 0.9rem;
   }
 
   .comment-card {
@@ -551,6 +562,18 @@ textarea::placeholder {
 
   .comment-datetime {
     font-size: 0.85rem;
+  }
+
+  .user-firstname {
+    color:#4D5156;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+  
+  .comment-status {
+    margin: 5px 12px;
+    color:#4D5156;
+    font-size: 0.9rem;
   }
 
   .delete-btn button {

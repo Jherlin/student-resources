@@ -171,7 +171,7 @@ return (
       </div>
       <div className="comment-section">
         <form className="comment-form">
-        {user.id && <p className="user-firstname">Comment as {user.firstName}</p>}
+        {user.id && <p className="user-firstname">Comment as {user.firstName}:</p>}
           <TextField
             className="comment-draft"
             id="outlined-multiline-static"
@@ -190,7 +190,7 @@ return (
             }}
           />
         </form>
-        {loading && <div className="loading-text">Loading...</div>}
+        {/* {loading && <div className="loading-text">Loading...</div>} */}
         {comments.length ? comments.map( comment => {
         return(
           <div className="comment-card" key={comment.id}>
