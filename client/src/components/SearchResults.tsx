@@ -20,7 +20,7 @@ const SearchResults = ( { searchResults }: SearchResultsProps) => {
               <a className="website-link" href={item.url} target="_blank" rel="noreferrer">{item.url}</a>
               <p>{item.description.slice(0, 141)}...</p>
               <span>Category: {item.category} · </span>
-              <span className="dicussion-btn">
+              <span className="discussion-btn">
                 <Link to="/discussion" state={{ resourceId: item.id }}>Discussion </Link><ChatIcon />
               </span>
             </div>

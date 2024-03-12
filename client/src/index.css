@@ -264,18 +264,18 @@ ul button:hover {
   font-size: 0.85rem;
 }
 
-.dicussion-btn:hover {
+.discussion-btn:hover {
   color: #1976D2;
   cursor: pointer;
 }
 
-.dicussion-btn a:hover {
+.discussion-btn a:hover {
   color: #1976D2;
 }
 
 .loadingSection {
   font-size: 0.8rem;
-  margin: 10px 12px;
+  margin: -85px 12px 30px 12px;
 }
 
 /* Discussion Board Styles */
@@ -519,6 +519,11 @@ textarea::placeholder {
   .website-link {
     font-size: 0.9rem;
     overflow-wrap: break-word;
+  }
+
+  .loadingSection {
+    font-size: 0.8rem;
+    margin: -140px 12px 40px 12px;
   }
 
   .card h2 {
