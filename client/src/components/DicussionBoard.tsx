@@ -9,6 +9,7 @@ import { User, UserContextType } from "../@types/user";
 import GlobalContext from "../providers/GlobalContext";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { url, axiosConfig } from "../axiosConfig";
+import websiteIcon from "../assets/web.png";
 
 const DiscussionBoard = () => {
   const params = useParams();
@@ -139,6 +140,11 @@ const DiscussionBoard = () => {
     }
   };
 
+  const handleError = ( currentTarget: EventTarget & HTMLImageElement ) => {
+    currentTarget.onerror = null
+    currentTarget.src = websiteIcon
+  };
+
   useEffect(() => {
     let finalQuery = resourceId;
 
@@ -166,7 +172,12 @@ return (
           {user.role === "Admin" && <><span> · </span><button onClick={() => deleteResource(resource.id)}>Delete</button></>}
         </div>
         <div className="resource-img">
-          <a href={resource.url} target="_blank" rel="noreferrer"><img src={resource.image} alt={""}/></a>
+          <a href={resource.url} target="_blank" rel="noreferrer">
+              <img 
+              src={resource.image} 
+              alt={""} 
+              onError={({ currentTarget }) => handleError(currentTarget)}/>
+          </a>
         </div>
       </div>
       <div className="comment-section">

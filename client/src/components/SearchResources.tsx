@@ -21,7 +21,7 @@ const SearchResources = () => {
     category: ""
   });
 
-  const { response, loading } = useAxios({
+  const { response } = useAxios({
     method: "POST",
     url: `${url}${axiosParams.route}`, axiosConfig,
     data: {
@@ -30,8 +30,8 @@ const SearchResources = () => {
     }
     },
     {loadStatus: axiosParams.loadMore});
-
-  let numberOfPages = 1;
+  
+  let numberOfPages = 1;  
 
   if(searchResults.length > 25) {
     numberOfPages = Math.ceil(searchResults.length  / 25)
@@ -149,7 +149,7 @@ const SearchResources = () => {
           <div className={"categories-container"}>
             <Categories searchCategory={searchCategory} axiosParams={axiosParams} setAxiosParams={setAxiosParams}/>
           </div>}
-          <div className={!searchResults.length || (loading && !axiosParams.skipPages) ? "search-results" : "search-results show-search-results"}>
+          <div className={!searchResults.length ? "search-results" : "search-results show-search-results"}>
             <SearchResults searchResults={searchResults} />
           </div>
           <div className="loadingSection">
