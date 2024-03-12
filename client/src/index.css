@@ -356,7 +356,7 @@ textarea::placeholder {
 .form-title {
   padding: 20px 0px;
   font-weight: 400;
-  font-size: 1.9rem;
+  font-size: 1.6rem;
   text-align: center;
 }
 
@@ -379,7 +379,6 @@ textarea::placeholder {
 .resource-form {
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
   width: 350px;
   margin: auto auto;
 }
@@ -396,15 +395,18 @@ textarea::placeholder {
 /* Admin Panel Styling */
 .admin-header {
   margin: 10px 12px;
+  padding: 20px 0px;
 }
 
 .admin-header h1{
+  font-weight: 400;
   font-size: 1.6rem;
 }
 
 .admin-header h2{
   padding-top: 10px;
-  font-size: 1.2rem;
+  font-weight: 400;
+  font-size: 1.1rem;
 }
 
 /* Dashboard Styling */
@@ -413,11 +415,14 @@ textarea::placeholder {
 }
 
 .dashboard-title {
-  font-size: 1.6rem;
+  padding: 20px 0px;
+  font-weight: 400;
+  font-size: 1.6rem;;
 }
 
 .user-stats {
   margin-top: 20px;
+  font-weight: 400;
   font-size: 1rem;
   line-height: 1.4rem;
 }
@@ -603,7 +608,8 @@ textarea::placeholder {
 
   /* Dashboard Styling */
   .user-stats {
-    margin-top: 20px;
+    margin-top: 0px;
+    font-weight: 400;
     font-size: 1.1rem;
     line-height: 1.4rem;
 }

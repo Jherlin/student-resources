@@ -47,7 +47,7 @@ const DiscussionBoard = () => {
     try {
       const response = await axios.get(`${url}/fetch-resource/${resourceId}`, axiosConfig)
 
-      if (response.status === 200) {
+      if (response.status === 200 && response.data[0]) {
         setResource(response.data[0]);
         updateBrowserUrl(resourceId);
         getComments();
@@ -190,7 +190,7 @@ return (
             }}
           />
         </form>
-        {/* {loading && <div className="loading-text">Loading...</div>} */}
+        {loading && <div className="loading-text">Loading...</div>}
         {comments.length ? comments.map( comment => {
         return(
           <div className="comment-card" key={comment.id}>
