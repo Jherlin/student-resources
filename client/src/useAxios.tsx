@@ -44,7 +44,7 @@ export const useAxios = (axiosParams: any, pagination: any) => {
       controller.abort();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [axiosParams.url, axiosParams.data.searchQuery, axiosParams.data.offset]);
+  }, [axiosParams.url, axiosParams.data.searchQuery, axiosParams.data.offset, axiosParams.data.filter]);
   
   return { response, loading };
 }

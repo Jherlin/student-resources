@@ -192,10 +192,16 @@ app.get("/fetch-userstats/:userId", (req, res) => __awaiter(void 0, void 0, void
 }));
 // Search engine
 app.post("/search-resources", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { searchQuery, offset } = req.body;
+    const { searchQuery, filter, offset } = req.body;
     try {
-        const data = yield db.getSearchItems(searchQuery, offset);
-        return res.json(data);
+        if (!filter) {
+            const data = yield db.getSearchItems(searchQuery, offset);
+            return res.json(data);
+        }
+        else {
+            const dataFiltered = yield db.getFilteredSearchItems(searchQuery, filter, offset);
+            return res.json(dataFiltered);
+        }
     }
     catch (error) {
         console.error(error);

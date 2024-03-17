@@ -120,6 +120,18 @@ export const getItemsByCategory = (category: string, offset: number) => {
   });
 };
 
+export const getFilteredSearchItems = (searchQuery: string, filter: string, offset: number) => {
+  return new Promise((resolve, reject)=> {
+    const sql = "SELECT *, MATCH (title, url, category) AGAINST (?) as score FROM resource WHERE MATCH (title, url, category) AGAINST (?) > 0 AND approval_pending=0 AND CATEGORY=? ORDER BY score DESC LIMIT ?, 25";
+    connection.query(sql, [searchQuery, searchQuery, filter, offset], (error, result) => {
+      if(error){
+        return reject(error);
+      }
+        return resolve(result);
+    });
+  });
+};
+
 export const getResource = (resourceId: string) => {
   return new Promise((resolve, reject)=> {
     const sql = " SELECT resource.id, resource.title, resource.url, resource.description, resource.image, resource.category, person.first_name as firstName FROM resource INNER JOIN person ON resource.submitted_by=person.id WHERE resource.id=?";

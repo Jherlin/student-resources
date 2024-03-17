@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserStats = exports.deleteComment = exports.insertComment = exports.getComments = exports.getResource = exports.getItemsByCategory = exports.getSearchItems = exports.deleteResource = exports.updatePendingStatus = exports.getPendingSubmittals = exports.insertRersource = exports.getUserByEmail = exports.getUserById = exports.insertUser = exports.connection = void 0;
+exports.getUserStats = exports.deleteComment = exports.insertComment = exports.getComments = exports.getResource = exports.getFilteredSearchItems = exports.getItemsByCategory = exports.getSearchItems = exports.deleteResource = exports.updatePendingStatus = exports.getPendingSubmittals = exports.insertRersource = exports.getUserByEmail = exports.getUserById = exports.insertUser = exports.connection = void 0;
 const dotenv = __importStar(require("dotenv"));
 const mysql_1 = __importDefault(require("mysql"));
 const uuid_1 = require("uuid");
@@ -144,6 +144,18 @@ const getItemsByCategory = (category, offset) => {
     });
 };
 exports.getItemsByCategory = getItemsByCategory;
+const getFilteredSearchItems = (searchQuery, filter, offset) => {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT *, MATCH (title, url, category) AGAINST (?) as score FROM resource WHERE MATCH (title, url, category) AGAINST (?) > 0 AND approval_pending=0 AND CATEGORY=? ORDER BY score DESC LIMIT ?, 25";
+        exports.connection.query(sql, [searchQuery, searchQuery, filter, offset], (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            return resolve(result);
+        });
+    });
+};
+exports.getFilteredSearchItems = getFilteredSearchItems;
 const getResource = (resourceId) => {
     return new Promise((resolve, reject) => {
         const sql = " SELECT resource.id, resource.title, resource.url, resource.description, resource.image, resource.category, person.first_name as firstName FROM resource INNER JOIN person ON resource.submitted_by=person.id WHERE resource.id=?";

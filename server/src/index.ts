@@ -186,11 +186,17 @@ app.get("/fetch-userstats/:userId", async (req, res) => {
 
 // Search engine
 app.post("/search-resources", async (req, res) => {
-  const { searchQuery, offset } = req.body;
+  const { searchQuery, filter, offset } = req.body;
 
   try {
-    const data = await db.getSearchItems(searchQuery, offset) as RowDataPacket;
-    return res.json(data);
+    if (!filter) {
+      const data = await db.getSearchItems(searchQuery, offset) as RowDataPacket;
+      return res.json(data);
+    } else {
+      const dataFiltered = await db.getFilteredSearchItems(searchQuery, filter, offset) as RowDataPacket;
+      return res.json(dataFiltered);
+    }
+
 } catch (error) {
     console.error(error);
     return res.sendStatus(403);

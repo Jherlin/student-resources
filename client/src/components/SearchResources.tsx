@@ -7,6 +7,8 @@ import { useAxios } from "../useAxios";
 import Categories from "./Categories";
 import { Data } from "../@types/data";
 import { url, axiosConfig } from "../axiosConfig";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const SearchResources = () => {
   const params = useParams();
@@ -18,7 +20,8 @@ const SearchResources = () => {
     query: "",
     finalQuery: "",
     route: "/search-resources",
-    category: ""
+    category: "",
+    filter: ""
   });
 
   const { response } = useAxios({
@@ -26,7 +29,8 @@ const SearchResources = () => {
     url: `${url}${axiosParams.route}`, axiosConfig,
     data: {
       searchQuery : axiosParams.finalQuery, 
-      offset: axiosParams.skipPages
+      offset: axiosParams.skipPages,
+      filter: axiosParams.filter
     }
     },
     {loadStatus: axiosParams.loadMore});
@@ -47,7 +51,10 @@ const SearchResources = () => {
       return;
     };
 
-    setAxiosParams({...axiosParams, route: "/search-resources", finalQuery: axiosParams.query})
+    setAxiosParams({
+      ...axiosParams, 
+      route: "/search-resources", 
+      finalQuery: axiosParams.query})
     };
 
   const loadMoreResults = () => {
@@ -63,7 +70,11 @@ const SearchResources = () => {
 
     numberOfPages += 1;
     let paginationOffset = (numberOfPages - 1) * 25
-    setAxiosParams({...axiosParams,route: "/search-resources", skipPages: paginationOffset, loadMore: true});
+    setAxiosParams({
+      ...axiosParams,
+      route: "/search-resources", 
+      skipPages: paginationOffset, 
+      loadMore: true});
   };
 
   const searchCategory = (category: string) => {
@@ -94,7 +105,12 @@ const SearchResources = () => {
     const homeUrl = window.location.protocol + "//" + window.location.host;
 
     if (searchResults.length) {
-      setAxiosParams({...axiosParams, query: "", finalQuery: ""})
+      setAxiosParams({
+        ...axiosParams, 
+        query: "", 
+        finalQuery: "",
+        filter: ""})
+
       setSearchResults([])
       window.history.replaceState({path:homeUrl},"", "/")
     };
@@ -131,6 +147,20 @@ const SearchResources = () => {
           value={axiosParams.query} 
           onChange={(e)=> setAxiosParams({...axiosParams, query: e.target.value})}
           type="text"/>
+          {/*<Select
+            id="demo-simple-select-filled"
+            className="filter-selection"
+            size="small"
+            value={axiosParams.filter}
+            onChange={(e) => setAxiosParams({...axiosParams, filter: e.target.value})}
+          > 
+            <MenuItem value="Web Development">Web Development</MenuItem>
+            <MenuItem value="Database">Database</MenuItem>
+            <MenuItem value="YouTube Content">YouTube Content</MenuItem>
+            <MenuItem value="Educational Courses">Educational Courses</MenuItem>
+            <MenuItem value="Data Structures & Algorithms">Data Structures & Algorithms</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
+          </Select> */}
           <div className="search-bar-btns">
             <Button 
             type="submit"

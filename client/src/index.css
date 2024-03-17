@@ -506,6 +506,12 @@ textarea::placeholder {
     font-size: 0.75rem;
   }
 
+  .filter-selection {
+    min-width: 300px;
+    margin-top: 16px;
+    margin-left: 10px;
+  }
+
   .categories-container {
     display: flex;
     flex-wrap: wrap;
