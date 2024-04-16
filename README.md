@@ -1,11 +1,8 @@
 # student-resources
 
-Live Project --> https://student-resources.herokuapp.com/
-
 # Student Resources Web App and Search
 
 ## This is a fully functional web app where students can search or submit CS related resources
-Live Website --> https://pink-super-crayfish.cyclic.app/
 
 This project began because I needed a place to store all the CS resources I was using to build fullstack applications and study for technical interviews. I found myself with more than 100 tabs packed into folders on my browser. Whenever I went back to develop an application with a different language, it was difficult to pinpoint the resources I had used before. I also wanted a way to provide all the resources needed to get started with programming for people who were new to coding.
 
